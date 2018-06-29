@@ -1,0 +1,2 @@
+#define nnlib_test_VERSION_MAJOR @nnlib_test_VERSION_MAJOR@
+#define nnlib_test_VERSION_MINOR @nnlib_test_VERSION_MINOR@
