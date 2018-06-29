@@ -1,5 +1,5 @@
 # forward
-A small and fast neural network inference engine
+a small and fast neural network inference engine
 
 A package containing extracted networks to test this program is
 available here: https://drive.google.com/open?id=1QWEXEsZO6OhqolNyzhf2AXxn_07jHnlt
