@@ -25,13 +25,6 @@
 #include "kernels.h"
 
 
-#define v8sf __m256
-
-#define avx_addps(a, b) _mm256_add_ps((a), (b))
-#define avx_mulps(a, b) _mm256_mul_ps((a), (b))
-#define avx_madd(a, b, c) _mm256_fmadd_ps((a), (b), (c))
-
-
 float dot_reference(const float *restrict v0, const float *restrict v1, int64_t n)
 {
     int64_t i;

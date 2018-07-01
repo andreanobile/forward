@@ -27,11 +27,8 @@ class SoftmaxLayer : public Layer
 public:
     SoftmaxLayer();
 
-
     virtual void forward();
     virtual void bind(const std::vector<std::vector<size_t>> &shapes);
-
-
 
 };
 
