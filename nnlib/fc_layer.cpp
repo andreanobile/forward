@@ -84,7 +84,7 @@ void FCLayer::forward()
         }
     } else {
         for(i=0;i<n_out;i++) {
-            d[i] = RELU(d[i] + bdata[i]);
+            d[i] = d[i] + bdata[i];
         }
     }
 
