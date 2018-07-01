@@ -306,35 +306,41 @@ int main(int argc, char *argv[])
     }
 
     CaffeLoader loader;
-    unique_ptr<Net> net = loader.load_prototxt(net_desc_filename, net_name);
     vector<size_t> image_shape({1, 3, 224, 224});
-    net->bind(image_shape);
+    vector<unique_ptr<Net>> vnet;
 
-    unique_ptr<Net> net2(new Net);
-    net2->copy_net_sharing_weights(*net);
-    net2->bind(image_shape);
+    vnet.push_back(loader.load_prototxt(net_desc_filename, net_name));
+    vnet[0]->bind(image_shape);
+
+    int nthreads = 2;
+    for(int ithread=1;ithread<nthreads;ithread++)
+    {
+        vnet.emplace_back(new Net);
+        vnet[ithread]->copy_net_sharing_weights(*vnet[0]);
+        vnet[ithread]->bind(image_shape);
+    }
 
 
     if(argc > 2) {
 
         for (int kk=2;kk<argc;) {
 
-            if((kk+1)<argc) {
+            if((kk+1)<argc && nthreads > 1) {
 
-                thread th(net_forward_on_image, net2.get(), string(argv[kk+1]), image_shape);
-                net_forward_on_image(net.get(), string(argv[kk]), image_shape);
+                thread th(net_forward_on_image, vnet[1].get(), string(argv[kk+1]), image_shape);
+                net_forward_on_image(vnet[0].get(), string(argv[kk]), image_shape);
                 th.join();
                 cout << kk-2  << " inference on image " << string(argv[kk]) << '\n';
-                show_output(net.get(), classes);
+                show_output(vnet[0].get(), classes);
                 cout << kk-2 + 1 << " inference on image " << string(argv[kk+1]) << '\n';
-                show_output(net2.get(), classes);
+                show_output(vnet[1].get(), classes);
                 kk+=2;
 
             } else {
 
-                net_forward_on_image(net.get(), string(argv[kk]), image_shape);
+                net_forward_on_image(vnet[0].get(), string(argv[kk]), image_shape);
                 cout << kk-2  << " inference on image " << string(argv[kk]) << '\n';
-                show_output(net.get(), classes);
+                show_output(vnet[0].get(), classes);
                 kk+=1;
 
             }
