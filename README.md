@@ -11,6 +11,8 @@ The resnet networks (r50 r101 r152) are trained on imagenet by MSRA
 https://github.com/KaimingHe/deep-residual-networks (their licence applies)
 
 
+To run the program a HASWELL (supporting AVX, fma) or newer cpu is needed. A Linux system is also needed. 
+
 BUILD:
 in the source directory use cmake.
 
