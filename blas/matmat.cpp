@@ -289,6 +289,9 @@ void matmat(float *a, float *b, float *c, int m, int n, int k, int mode, volatil
 
                 sgemm_nn(&args, sa, sb, 2, a);
                 blas_memory_free(buffer);
+                if(lock_addr) {
+                    blas_unlock(lock_addr);
+                }
                 return;
             }
 
