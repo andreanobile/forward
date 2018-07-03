@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
     vnet.push_back(loader.load_prototxt(net_desc_filename, net_name));
     vnet[0]->bind(image_shape);
 
-    int nthreads = 2;
+    int nthreads = 4;
     for(int ithread=1;ithread<nthreads;ithread++)
     {
         vnet.emplace_back(new Net);
@@ -320,21 +320,30 @@ int main(int argc, char *argv[])
         vnet[ithread]->bind(image_shape);
     }
 
+    thread t[nthreads -1];
 
     if(argc > 2) {
 
         for (int kk=2;kk<argc;) {
 
-            if((kk+1)<argc && nthreads > 1) {
+            if((kk+nthreads-1)<argc && nthreads > 1) {
 
-                thread th(net_forward_on_image, vnet[1].get(), string(argv[kk+1]), image_shape);
+                for(int i=0;i<nthreads-1;i++) {
+                    t[i] = thread(net_forward_on_image, vnet[i+1].get(), string(argv[kk+1+i]), image_shape);
+                }
+
                 net_forward_on_image(vnet[0].get(), string(argv[kk]), image_shape);
-                th.join();
-                cout << kk-2  << " inference on image " << string(argv[kk]) << '\n';
-                show_output(vnet[0].get(), classes);
-                cout << kk-2 + 1 << " inference on image " << string(argv[kk+1]) << '\n';
-                show_output(vnet[1].get(), classes);
-                kk+=2;
+
+                for(int i=0;i<nthreads-1;i++) {
+                    t[i].join();
+                }
+
+                for(int i=0;i<nthreads;i++) {
+                    cout << kk-2+i  << " inference on image " << string(argv[kk]) << '\n';
+                    show_output(vnet[i].get(), classes);
+                }
+
+                kk+=nthreads;
 
             } else {
 
