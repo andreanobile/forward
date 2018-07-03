@@ -286,12 +286,11 @@ void matmat(float *a, float *b, float *c, int m, int n, int k, int mode, volatil
 
             auto it = set_a.find(a);
             if(it != set_a.end()) {
-
-                sgemm_nn(&args, sa, sb, 2, a);
-                blas_memory_free(buffer);
                 if(lock_addr) {
                     blas_unlock(lock_addr);
                 }
+                sgemm_nn(&args, sa, sb, 2, a);
+                blas_memory_free(buffer);
                 return;
             }
 
