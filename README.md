@@ -21,7 +21,7 @@ $ make
 
 USAGE: 
 
-download the dumped networks from the googledrive link. The test program looks into ../networks .
+download the extracted networks from the googledrive link. The test program looks into ../networks .
 To run with the places 365 network on your pictures contained in the directory ~/Pictures :
 
 $ ./nnlib_test places ~/Pictures/*.jpg
