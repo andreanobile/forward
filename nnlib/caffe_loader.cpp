@@ -318,6 +318,7 @@ unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &da
     if (f.is_open()) {
         ss << f.rdbuf();
         f.close();
+        cout << "opening newtwork description " << fname << '\n';
         auto root = parse_caffe_prototxt(ss);
         //rewrite_network(root);
         //exit(0);
