@@ -339,7 +339,7 @@ int main(int argc, char *argv[])
                 }
 
                 for(int i=0;i<nthreads;i++) {
-                    cout << kk-2+i  << " inference on image " << string(argv[kk+1+i]) << '\n';
+                    cout << kk-2+i  << " inference on image " << string(argv[kk+i]) << '\n';
                     show_output(vnet[i].get(), classes);
                 }
 
