@@ -60,7 +60,6 @@ void PoolingLayer::bind(const vector<vector<size_t>> &shapes)
         cout << "warning " << name << " shape w has been padded" << endl;
     }
 
-    //cout << "pool " << (pooling_method == pool_ave ? string(" AVE ") : string(" MAX ")) << endl;
 }
 
 
