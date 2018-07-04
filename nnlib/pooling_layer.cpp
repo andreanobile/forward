@@ -55,7 +55,7 @@ void PoolingLayer::bind(const vector<vector<size_t>> &shapes)
         ceiled_h = 1;
         cout << "warning " << name << " shape h has been padded" << endl;
     }
-    if(!good_shape((input_shapes[0][2]), kernel_size, stride_size)) {
+    if(!good_shape((input_shapes[0][3]), kernel_size, stride_size)) {
         ceiled_w = 1;
         cout << "warning " << name << " shape w has been padded" << endl;
     }
