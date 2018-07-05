@@ -28,7 +28,6 @@
 #include <math.h>
 
 #include "nnlib_test_config.h"
-#include "nnlib.h"
 #include "caffe_loader.h"
 #include "network_node.h"
 #include "net.h"
