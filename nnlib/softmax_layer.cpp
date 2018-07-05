@@ -50,7 +50,6 @@ void SoftmaxLayer::bind(const vector<vector<size_t>> &shapes)
 
 void SoftmaxLayer::forward()
 {
-    //cout << "softmax " << name << " forward " << endl;
 
     ndarray *input = input_arrays[0].get();
     ndarray *output = output_array.get();
