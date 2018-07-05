@@ -24,7 +24,7 @@
 #include "layer.h"
 #include "network_node.h"
 
-std::shared_ptr<Layer> create_layer(Layer::Type op_type, std::shared_ptr<NetworkNode> params);
+std::shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params);
 std::shared_ptr<Layer> copy_layer(Layer *l);
 
 #endif // LAYER_FACTORY_H

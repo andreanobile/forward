@@ -35,15 +35,12 @@
 using namespace std;
 
 
-shared_ptr<Layer> create_layer(Layer::Type op_type, shared_ptr<NetworkNode> params)
+shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params)
 {
-    shared_ptr<Layer> layer;
-
 
     if(op_type == Layer::op_convolution)
     {
-        shared_ptr<Layer> ptr(new ConvLayer());
-        auto conv = static_cast<ConvLayer*>(ptr.get());
+        auto conv = make_shared<ConvLayer>();
         auto vs = params->get_prop("num_output");
         assert(vs.size() == 1);
         size_t nout = stoi(vs[0]);
@@ -70,42 +67,40 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, shared_ptr<NetworkNode> para
             }
         }
 
-        return ptr;
+        return static_pointer_cast<Layer>(conv);
     }
 
     else if(op_type == Layer::op_batchnorm)
     {
-        shared_ptr<Layer> ptr(new BatchNormLayer());
-        return ptr;
+        auto ptr = make_shared<BatchNormLayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_softmax)
     {
-        shared_ptr<Layer> ptr(new SoftmaxLayer());
-        return ptr;
+        auto ptr = make_shared<SoftmaxLayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_fc)
     {
-        shared_ptr<Layer> ptr(new FCLayer());
-        auto fc = static_cast<FCLayer*>(ptr.get());
+        auto fc = make_shared<FCLayer>();
         auto vs = params->get_prop("num_output");
         assert(vs.size() == 1);
         size_t nout = stoi(vs[0]);
         fc->set_num_output_channels(nout);
-        return ptr;
+        return static_pointer_cast<Layer>(fc);
     }
 
     else if(op_type == Layer::op_relu)
     {
-        shared_ptr<Layer> ptr(new ReLULayer());
-        return ptr;
+        auto ptr = make_shared<ReLULayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_scale)
     {
-        shared_ptr<Layer> ptr(new ScaleLayer());
-        auto sc = static_cast<ScaleLayer*>(ptr.get());
+        auto sc = make_shared<ScaleLayer>();
         auto vs = params->get_prop("bias_term");
         if(vs.size()) {
             if(vs[0] == "false") {
@@ -114,13 +109,12 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, shared_ptr<NetworkNode> para
                 sc->has_bias = true;
             }
         }
-        return ptr;
+        return static_pointer_cast<Layer>(sc);
     }
 
     else if(op_type == Layer::op_pool)
     {
-        shared_ptr<Layer> ptr(new PoolingLayer());
-        auto pool = static_cast<PoolingLayer*>(ptr.get());
+        auto pool = make_shared<PoolingLayer>();
         auto vs = params->get_prop("kernel_size");
         assert(vs.size() == 1);
         pool->set_kernel_size(stoi(vs[0]));
@@ -134,31 +128,30 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, shared_ptr<NetworkNode> para
             pool->set_pooling_method(vs[0] == "AVE" ? pool->pool_ave : pool->pool_max);
         }
 
-        return ptr;
+        return static_pointer_cast<Layer>(pool);
     }
 
     else if(op_type == Layer::op_eltwise_sum)
     {
-        shared_ptr<Layer> ptr(new EltWiseLayer());
-        return ptr;
+        auto ptr = make_shared<EltWiseLayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_input)
     {
-        shared_ptr<Layer> ptr(new InputLayer());
-        auto inp = static_cast<InputLayer*>(ptr.get());
+        auto inp = make_shared<InputLayer>();
         auto p = params->get_prop("input_dim");
         for (auto &d : p) {
             inp->add_dim(stoi(d));
         }
-        return ptr;
+        return static_pointer_cast<Layer>(inp);
     }
 
     else
     {
         cout << "passed invalid op_type to create_layer" << endl;
         abort();
-        return layer;
+        return nullptr;
     }
 }
 
@@ -172,80 +165,70 @@ static void copylayer(Layer *n, Layer*o)
 }
 
 
+template<typename T>
+static shared_ptr<Layer> make_and_copy(Layer *l)
+{
+    auto ptr = make_shared<T>();
+    copylayer<T>(static_cast<Layer*>(ptr.get()), l);
+    return static_pointer_cast<Layer>(ptr);
+}
+
+
 shared_ptr<Layer> copy_layer(Layer *l)
 {
 
-    shared_ptr<Layer> layer;
     Layer::Type op_type = l->op_type;
 
     if(op_type == Layer::op_convolution)
     {
-        shared_ptr<Layer> ptr(new ConvLayer());
-        copylayer<ConvLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<ConvLayer>(l);
     }
 
     else if(op_type == Layer::op_batchnorm)
     {
-        shared_ptr<Layer> ptr(new BatchNormLayer());
-        copylayer<BatchNormLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<BatchNormLayer>(l);
     }
 
     else if(op_type == Layer::op_softmax)
     {
-        shared_ptr<Layer> ptr(new SoftmaxLayer());
-        copylayer<SoftmaxLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<SoftmaxLayer>(l);
     }
 
     else if(op_type == Layer::op_fc)
     {
-        shared_ptr<Layer> ptr(new FCLayer());
-        copylayer<FCLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<FCLayer>(l);
     }
 
     else if(op_type == Layer::op_relu)
     {
-        shared_ptr<Layer> ptr(new ReLULayer());
-        copylayer<ReLULayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<ReLULayer>(l);
     }
 
     else if(op_type == Layer::op_scale)
     {
-        shared_ptr<Layer> ptr(new ScaleLayer());
-        copylayer<ScaleLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<ScaleLayer>(l);
     }
 
     else if(op_type == Layer::op_pool)
     {
-        shared_ptr<Layer> ptr(new PoolingLayer());
-        copylayer<PoolingLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<PoolingLayer>(l);
     }
 
     else if(op_type == Layer::op_eltwise_sum)
     {
-        shared_ptr<Layer> ptr(new EltWiseLayer());
-        copylayer<EltWiseLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<EltWiseLayer>(l);
     }
 
     else if(op_type == Layer::op_input)
     {
-        shared_ptr<Layer> ptr(new InputLayer());
-        copylayer<InputLayer>(ptr.get(), l);
-        return ptr;
+        return make_and_copy<InputLayer>(l);
     }
 
     else
     {
         cout << "passed invalid op_type to create_layer" << endl;
         abort();
-        return layer;
+        return nullptr;
     }
 }
 

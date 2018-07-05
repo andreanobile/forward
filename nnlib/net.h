@@ -51,7 +51,7 @@ class Net
         return input_layers[0]->output_array.get();
     }
 
-    void remove_layer(std::shared_ptr<Layer> layer);
+    void remove_layer(std::shared_ptr<Layer> &layer);
     void allocate_fmap_buffer(size_t nelem);
 
 public:
@@ -67,7 +67,7 @@ public:
     bool bind(const std::vector<size_t> &shape);
     void add_layer(std::shared_ptr<Layer> &layer);
     Layer* add_layer(Layer::Type layer_type,
-                                     std::shared_ptr<NetworkNode> params,
+                                     NetworkNode* params,
                                      const std::vector<std::string> &inputs,
                                      const std::string &layer_name,
                                      const std::string &output_name);

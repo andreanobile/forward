@@ -92,7 +92,7 @@ public:
         log_bind();
     }
 
-    virtual void bind() //inpulayer has a different bind, so must be virtual
+    virtual void bind() //inpulayer has a different bind
     {
         std::vector<std::vector<size_t>> shapes;
         for(Layer *l : input_layers) {

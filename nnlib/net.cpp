@@ -69,7 +69,7 @@ struct NetMem
         if(bestblk != blks.end()) {
             if(bestblk->sz >= amount) {
                 bestblk->valid = true;
-                //cout << "get index " << bestblk->start << endl;
+
                 return bestblk->start;
             }
         }
@@ -100,7 +100,7 @@ struct NetMem
         for(auto &blk : blks) {
             if(index == blk.start) {
                 blk.valid = false;
-                //cout << "release index " << index << " " << blk.sz << endl;
+
                 return;
             }
         }
@@ -149,13 +149,14 @@ Net::~Net()
 void Net::allocate_fmap_buffer(size_t nelem)
 {
     if(fmap_buffer) free(fmap_buffer);
-    //fmap_buffer = (float*) malloc(sizeof(float)*nelem);
+
     int ret = posix_memalign((void**)&fmap_buffer, 64, sizeof(float)*nelem);
     if(ret) {
         cout << "failed to allocte fmap_buffer ! \n";
         abort();
     }
 }
+
 
 bool Net::bind(const vector<size_t> &shape)
 {
@@ -310,7 +311,7 @@ void Net::optimize()
         vl.push_back(layer);
     }
 
-    for(auto layer : vl) {
+    for(auto &layer : vl) {
 
         auto it = layer->input_layers.begin();
         if(it != layer->input_layers.end()) {
@@ -359,7 +360,8 @@ void Net::add_layer(shared_ptr<Layer> &layer)
     out_name_to_layer.insert(po);
 }
 
-void Net::remove_layer(shared_ptr<Layer> layer)
+
+void Net::remove_layer(shared_ptr<Layer> &layer)
 {
 
     //assign to all input layers, the current layer's output layers as output layers
@@ -383,7 +385,7 @@ void Net::remove_layer(shared_ptr<Layer> layer)
 }
 
 
-Layer* Net::add_layer(Layer::Type layer_type, shared_ptr<NetworkNode> params,
+Layer* Net::add_layer(Layer::Type layer_type, NetworkNode* params,
                                  const vector<string> &inputs, const string &layer_name,
                                  const string &output_name)
 {

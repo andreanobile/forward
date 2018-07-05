@@ -152,10 +152,10 @@ vector<shared_ptr<ndarray>> CaffeLoader::load_data_files(const string &caffe_nam
 }
 
 
-void CaffeLoader::load_layer_data(Layer* layer, const NetworkNode &caffe_layer)
+void CaffeLoader::load_layer_data(Layer* layer, const NetworkNode *caffe_layer)
 {
     vector<shared_ptr<ndarray>> data_arrays;
-    const string &caffe_name = caffe_layer.properties.find("name")->second;
+    const string &caffe_name = caffe_layer->properties.find("name")->second;
     Layer::Type layer_type = layer->op_type;
 
     int nfiles = num_data_arrays(layer_type);
@@ -195,23 +195,23 @@ void CaffeLoader::load_layer_data(Layer* layer, const NetworkNode &caffe_layer)
 }
 
 
-void CaffeLoader::add_layer(Net &net, const NetworkNode &caffe_layer)
+void CaffeLoader::add_layer(Net *net, const NetworkNode *caffe_layer)
 {
-    auto it = caffe_layer.properties.find("name");
-    if (it != caffe_layer.properties.end()) {
-        auto caffe_layer_type = caffe_layer.properties.find("type");
+    auto it = caffe_layer->properties.find("name");
+    if (it != caffe_layer->properties.end()) {
+        auto caffe_layer_type = caffe_layer->properties.find("type");
 
         Layer::Type layer_type = map_layer(caffe_layer_type->second);
 
-        auto bottom_layers = caffe_layer.properties.equal_range("bottom");
+        auto bottom_layers = caffe_layer->properties.equal_range("bottom");
 
         vector<string> vinputs;
         for(auto bt=bottom_layers.first; bt != bottom_layers.second; bt++ ) {
             vinputs.push_back(bt->second);
         }
 
-        auto top_layers = caffe_layer.properties.equal_range("top");
-        if(caffe_layer.properties.count("top") > 1) {
+        auto top_layers = caffe_layer->properties.equal_range("top");
+        if(caffe_layer->properties.count("top") > 1) {
             cout << "wrong assumption in number of tops at layer " << it->second << endl;
             exit(0);
         }
@@ -223,17 +223,17 @@ void CaffeLoader::add_layer(Net &net, const NetworkNode &caffe_layer)
         }
 
         shared_ptr<NetworkNode> params(new NetworkNode());
-        if(caffe_layer.childs.size()) {
-            params = caffe_layer.childs[caffe_layer.childs.size()-1];
+        if(caffe_layer->childs.size()) {
+            params = caffe_layer->childs[caffe_layer->childs.size()-1];
         }
 
-        Layer* layer = net.add_layer(layer_type, params, vinputs, it->second, output);
+        Layer* layer = net->add_layer(layer_type, params.get(), vinputs, it->second, output);
         load_layer_data(layer, caffe_layer);
     }
 }
 
 
-unique_ptr<Net> CaffeLoader::build_network(shared_ptr<NetworkNode> &root)
+unique_ptr<Net> CaffeLoader::build_network(NetworkNode *root)
 {
     unique_ptr<Net> net(new Net);
 
@@ -243,7 +243,7 @@ unique_ptr<Net> CaffeLoader::build_network(shared_ptr<NetworkNode> &root)
 
     for (auto &l : root->childs) {
         if(l->node_type == layer_node) {
-            add_layer(*net, *l);
+            add_layer(net.get(), l.get());
         }
     }
 
@@ -321,7 +321,7 @@ unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &da
         cout << "opening newtwork description " << fname << '\n';
         auto root = parse_caffe_prototxt(ss);
         //rewrite_network(root);
-        unique_ptr<Net> net = build_network(root);
+        unique_ptr<Net> net = build_network(root.get());
         return net;
 
     } else {

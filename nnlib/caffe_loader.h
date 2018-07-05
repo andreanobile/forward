@@ -44,9 +44,9 @@ class CaffeLoader
     void check_match(char ch);
     std::shared_ptr<NetworkNode> parse_caffe_prototxt(std::stringstream &ss);
     void rewrite_network(std::shared_ptr<NetworkNode> root);
-    std::unique_ptr<Net> build_network(std::shared_ptr<NetworkNode> &root);
-    void add_layer(Net &net, const NetworkNode &caffe_layer);
-    void load_layer_data(Layer* layer, const NetworkNode &caffe_layer);
+    std::unique_ptr<Net> build_network(NetworkNode* root);
+    void add_layer(Net *net, const NetworkNode *caffe_layer);
+    void load_layer_data(Layer* layer, const NetworkNode *caffe_layer);
 
     std::vector<std::shared_ptr<ndarray>> load_data_files(const std::string &caffe_name, int nfiles);
 
