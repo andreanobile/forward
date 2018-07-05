@@ -256,7 +256,6 @@ void show_output(Net *net, vector<string> &classes_desc)
     for(size_t i=0;i<n_to_print;i++) {
         size_t idx = srt[nel-1-i];
         printf("%.2f %s \n", vout[idx], classes_desc[idx].c_str());
-        //cout << vout[idx] << " " << desc[idx] << endl;
     }
     printf("\n");
 }
