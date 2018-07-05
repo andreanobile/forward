@@ -233,7 +233,7 @@ void CaffeLoader::add_layer(Net &net, const NetworkNode &caffe_layer)
 }
 
 
-unique_ptr<Net> CaffeLoader::build_network(shared_ptr<NetworkNode> root)
+unique_ptr<Net> CaffeLoader::build_network(shared_ptr<NetworkNode> &root)
 {
     unique_ptr<Net> net(new Net);
 
@@ -247,7 +247,7 @@ unique_ptr<Net> CaffeLoader::build_network(shared_ptr<NetworkNode> root)
         }
     }
 
-    cout << endl << endl << endl;
+    cout << "\n\n\n";
 
     net->complete_construction();
 
@@ -321,7 +321,6 @@ unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &da
         cout << "opening newtwork description " << fname << '\n';
         auto root = parse_caffe_prototxt(ss);
         //rewrite_network(root);
-        //exit(0);
         unique_ptr<Net> net = build_network(root);
         return net;
 
