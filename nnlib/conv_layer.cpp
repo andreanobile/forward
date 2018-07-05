@@ -81,18 +81,9 @@ static inline void matmul(ndarray *ma, ndarray *mb, ndarray *mc, size_t m, size_
 
 #ifdef MATMUL_USE_BLAS
 
-
-
     //with weights in normal form
     cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, n, k,
                 1.0, ma->get_data(), k, mb->get_data(), n, 0.0, mc->get_data(), n);
-
-    /*
-    //with weights in transposed form
-    cblas_sgemm(CblasRowMajor, CblasTrans, CblasNoTrans, m, n, k,
-                1.0, ma->get_data(), m, mb->get_data(), n, 0.0, mc->get_data(), n);
-    */
-
 
 #else
 
@@ -111,6 +102,7 @@ static inline void matmul(ndarray *ma, ndarray *mb, ndarray *mc, size_t m, size_
 
 
 }
+
 
 void ConvLayer::im2col(ndarray *im, ndarray *result, size_t ksz, size_t stride)
 {
@@ -190,9 +182,8 @@ void ConvLayer::im2col(ndarray *im, ndarray *result, size_t ksz, size_t stride)
 
     }
 
-
-
 }
+
 
 
 void ConvLayer::forward()

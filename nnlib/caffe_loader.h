@@ -51,12 +51,10 @@ class CaffeLoader
     std::vector<std::shared_ptr<ndarray>> load_data_files(const std::string &caffe_name, int nfiles);
 
 public:
+
     CaffeLoader();
     std::unique_ptr<Net> load_prototxt(const std::string &fname, const std::string &data_dir);
     std::shared_ptr<ndarray> load_data(const std::string &fname);
-
-
-
 };
 
 #endif // CAFFE_LOADER_H
