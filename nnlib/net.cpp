@@ -385,7 +385,7 @@ void Net::remove_layer(shared_ptr<Layer> &layer)
 }
 
 
-Layer* Net::add_layer(Layer::Type layer_type, NetworkNode* params,
+Layer* Net::add_layer(Layer::Type layer_type, const NetworkNode &params,
                                  const vector<string> &inputs, const string &layer_name,
                                  const string &output_name)
 {

@@ -74,20 +74,20 @@ void CaffeLoader::check_match(char ch)
 }
 
 
-void CaffeLoader::rewrite_network(shared_ptr<NetworkNode> node)
+void CaffeLoader::rewrite_network(const NetworkNode &node)
 {
-    for(auto &prop : node->properties ) {
+    for(auto &prop : node.properties ) {
         cout << prop.first << ": " << prop.second << endl;
     }
 
-    for(auto pc : node->childs) {
+    for(auto &pc : node.childs) {
         if(pc->node_type == layer_node) {
             cout << "layer " << endl;
         } else if (pc->node_type == layer_properties_node) {
             cout << "properties " << endl;
         }
         cout << "{" << endl;
-        rewrite_network(pc);
+        rewrite_network(*pc);
         cout << "}" << endl;
     }
 }
@@ -152,10 +152,10 @@ vector<shared_ptr<ndarray>> CaffeLoader::load_data_files(const string &caffe_nam
 }
 
 
-void CaffeLoader::load_layer_data(Layer* layer, const NetworkNode *caffe_layer)
+void CaffeLoader::load_layer_data(Layer* layer, const NetworkNode &caffe_layer)
 {
     vector<shared_ptr<ndarray>> data_arrays;
-    const string &caffe_name = caffe_layer->properties.find("name")->second;
+    const string &caffe_name = caffe_layer.properties.find("name")->second;
     Layer::Type layer_type = layer->op_type;
 
     int nfiles = num_data_arrays(layer_type);
@@ -195,23 +195,23 @@ void CaffeLoader::load_layer_data(Layer* layer, const NetworkNode *caffe_layer)
 }
 
 
-void CaffeLoader::add_layer(Net *net, const NetworkNode *caffe_layer)
+void CaffeLoader::add_layer(Net *net, const NetworkNode &caffe_layer)
 {
-    auto it = caffe_layer->properties.find("name");
-    if (it != caffe_layer->properties.end()) {
-        auto caffe_layer_type = caffe_layer->properties.find("type");
+    auto it = caffe_layer.properties.find("name");
+    if (it != caffe_layer.properties.end()) {
+        auto caffe_layer_type = caffe_layer.properties.find("type");
 
         Layer::Type layer_type = map_layer(caffe_layer_type->second);
 
-        auto bottom_layers = caffe_layer->properties.equal_range("bottom");
+        auto bottom_layers = caffe_layer.properties.equal_range("bottom");
 
         vector<string> vinputs;
         for(auto bt=bottom_layers.first; bt != bottom_layers.second; bt++ ) {
             vinputs.push_back(bt->second);
         }
 
-        auto top_layers = caffe_layer->properties.equal_range("top");
-        if(caffe_layer->properties.count("top") > 1) {
+        auto top_layers = caffe_layer.properties.equal_range("top");
+        if(caffe_layer.properties.count("top") > 1) {
             cout << "wrong assumption in number of tops at layer " << it->second << endl;
             exit(0);
         }
@@ -222,28 +222,28 @@ void CaffeLoader::add_layer(Net *net, const NetworkNode *caffe_layer)
             output = tp->second;
         }
 
-        shared_ptr<NetworkNode> params(new NetworkNode());
-        if(caffe_layer->childs.size()) {
-            params = caffe_layer->childs[caffe_layer->childs.size()-1];
+        NetworkNode params;
+        if(caffe_layer.childs.size()) {
+            params = caffe_layer.get_child(caffe_layer.childs.size()-1);
         }
 
-        Layer* layer = net->add_layer(layer_type, params.get(), vinputs, it->second, output);
+        Layer* layer = net->add_layer(layer_type, params, vinputs, it->second, output);
         load_layer_data(layer, caffe_layer);
     }
 }
 
 
-unique_ptr<Net> CaffeLoader::build_network(NetworkNode *root)
+unique_ptr<Net> CaffeLoader::build_network(const NetworkNode &root)
 {
     unique_ptr<Net> net(new Net);
 
-    auto it = root->properties.find(string("input"));
+    auto it = root.properties.find(string("input"));
     vector<string> input_layers_names;
     net->add_layer(Layer::op_input, root, input_layers_names, it->second, it->second);
 
-    for (auto &l : root->childs) {
+    for (auto &l : root.childs) {
         if(l->node_type == layer_node) {
-            add_layer(net.get(), l.get());
+            add_layer(net.get(), *l);
         }
     }
 
@@ -257,13 +257,13 @@ unique_ptr<Net> CaffeLoader::build_network(NetworkNode *root)
 
 shared_ptr<NetworkNode> CaffeLoader::parse_caffe_prototxt(stringstream &ss)
 {
-    stack<shared_ptr<NetworkNode>> node_stack;
+    stack<NetworkNode*> node_stack;
     shared_ptr<NetworkNode> root(new NetworkNode);
     root->node_type = root_node;
-    shared_ptr<NetworkNode> node = root;
+    NetworkNode *nnode = root.get();
     string prevtok;
 
-    node_stack.push(node);
+    node_stack.push(nnode);
 
     while (!ss.eof()) {
 
@@ -274,21 +274,21 @@ shared_ptr<NetworkNode> CaffeLoader::parse_caffe_prototxt(stringstream &ss)
         for (auto &tok : tokens) {
 
             if(prevtok.find(':') != string::npos) {
-                node->properties.insert({remove_char(prevtok, ':'), remove_char(tok, '"')} );
+                nnode->properties.insert({remove_char(prevtok, ':'), remove_char(tok, '"')} );
             }
             if(tok.find('{') != string::npos)
             {
                 par_stack.push('{');
-                node = shared_ptr<NetworkNode>(new NetworkNode);
-
+                auto node = make_shared<NetworkNode>();
+                nnode = node.get();
                 if(prevtok.find("layer") != string::npos) {
-                    node->node_type = layer_node;
+                    nnode->node_type = layer_node;
                 } else if(prevtok.find("param") != string::npos) {
-                    node->node_type = layer_properties_node;
+                    nnode->node_type = layer_properties_node;
                 }
 
                 node_stack.top()->childs.push_back(node);
-                node_stack.push(node);
+                node_stack.push(nnode);
             }
 
             if(tok.find('}') != string::npos)
@@ -296,7 +296,7 @@ shared_ptr<NetworkNode> CaffeLoader::parse_caffe_prototxt(stringstream &ss)
                 node_stack.pop();
                 check_match('}');
                 par_stack.pop();
-                node = node_stack.top();
+                nnode = node_stack.top();
             }
 
             prevtok = tok;
@@ -320,8 +320,8 @@ unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &da
         f.close();
         cout << "opening newtwork description " << fname << '\n';
         auto root = parse_caffe_prototxt(ss);
-        //rewrite_network(root);
-        unique_ptr<Net> net = build_network(root.get());
+        rewrite_network(*root);
+        unique_ptr<Net> net = build_network(*root);
         return net;
 
     } else {

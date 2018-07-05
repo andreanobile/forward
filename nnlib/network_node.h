@@ -34,9 +34,9 @@ struct NetworkNode
     std::multimap<std::string, std::string> properties;
     std::vector<std::shared_ptr<NetworkNode>> childs;
 
-    std::string get_inner_prop(const std::string &prop)
+    std::string get_inner_prop(const std::string &prop) const
     {
-        for(auto p : childs) {
+        for(auto &p : childs) {
             auto it = p->properties.find(prop);
             if(it != p->properties.end()) {
                 return it->second;
@@ -47,12 +47,12 @@ struct NetworkNode
         return ret;
     }
 
-    size_t get_int_inner_prop(const std::string &prop)
+    size_t get_int_inner_prop(const std::string &prop) const
     {
         return std::stoi(get_inner_prop(prop));
     }
 
-    bool get_bool_inner_prop(const std::string &prop)
+    bool get_bool_inner_prop(const std::string &prop) const
     {
         std::string str = get_inner_prop(prop);
         if(str.length() == 0) return false;
@@ -60,7 +60,7 @@ struct NetworkNode
         else return true;
     }
 
-    std::vector<std::string> get_prop(const std::string &prop)
+    std::vector<std::string> get_prop(const std::string &prop) const
     {
         std::vector<std::string> vprop;
         auto rg = properties.equal_range(prop);
@@ -80,6 +80,10 @@ struct NetworkNode
         set_prop(key, std::to_string(value));
     }
 
+    NetworkNode &get_child(size_t idx) const
+    {
+        return *(childs[idx]);
+    }
 
     void clear()
     {

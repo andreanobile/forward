@@ -67,7 +67,7 @@ public:
     bool bind(const std::vector<size_t> &shape);
     void add_layer(std::shared_ptr<Layer> &layer);
     Layer* add_layer(Layer::Type layer_type,
-                                     NetworkNode* params,
+                                     const NetworkNode &params,
                                      const std::vector<std::string> &inputs,
                                      const std::string &layer_name,
                                      const std::string &output_name);

@@ -35,30 +35,30 @@
 using namespace std;
 
 
-shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params)
+shared_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
 {
 
     if(op_type == Layer::op_convolution)
     {
         auto conv = make_shared<ConvLayer>();
-        auto vs = params->get_prop("num_output");
+        auto vs = params.get_prop("num_output");
         assert(vs.size() == 1);
         size_t nout = stoi(vs[0]);
         conv->set_num_output_channels(nout);
 
-        vs = params->get_prop("kernel_size");
+        vs = params.get_prop("kernel_size");
         assert(vs.size() == 1);
         conv->set_kernel_size(stoi(vs[0]));
 
-        vs = params->get_prop("pad");
+        vs = params.get_prop("pad");
         assert(vs.size() == 1);
         conv->set_pad_size(stoi(vs[0]));
 
-        vs = params->get_prop("stride");
+        vs = params.get_prop("stride");
         assert(vs.size() == 1);
         conv->set_stride_size(stoi(vs[0]));
 
-        vs = params->get_prop("bias_term");
+        vs = params.get_prop("bias_term");
         if(vs.size() != 0) {
             if(vs[0] == "false") {
                 conv->has_bias = false;
@@ -85,7 +85,7 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params)
     else if(op_type == Layer::op_fc)
     {
         auto fc = make_shared<FCLayer>();
-        auto vs = params->get_prop("num_output");
+        auto vs = params.get_prop("num_output");
         assert(vs.size() == 1);
         size_t nout = stoi(vs[0]);
         fc->set_num_output_channels(nout);
@@ -101,7 +101,7 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params)
     else if(op_type == Layer::op_scale)
     {
         auto sc = make_shared<ScaleLayer>();
-        auto vs = params->get_prop("bias_term");
+        auto vs = params.get_prop("bias_term");
         if(vs.size()) {
             if(vs[0] == "false") {
                 sc->has_bias = false;
@@ -115,15 +115,15 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params)
     else if(op_type == Layer::op_pool)
     {
         auto pool = make_shared<PoolingLayer>();
-        auto vs = params->get_prop("kernel_size");
+        auto vs = params.get_prop("kernel_size");
         assert(vs.size() == 1);
         pool->set_kernel_size(stoi(vs[0]));
 
-        vs = params->get_prop("stride");
+        vs = params.get_prop("stride");
         assert(vs.size() == 1);
         pool->set_stride_size(stoi(vs[0]));
 
-        vs = params->get_prop("pool");
+        vs = params.get_prop("pool");
         if(vs.size() == 1){
             pool->set_pooling_method(vs[0] == "AVE" ? pool->pool_ave : pool->pool_max);
         }
@@ -140,7 +140,7 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, NetworkNode* params)
     else if(op_type == Layer::op_input)
     {
         auto inp = make_shared<InputLayer>();
-        auto p = params->get_prop("input_dim");
+        auto p = params.get_prop("input_dim");
         for (auto &d : p) {
             inp->add_dim(stoi(d));
         }
