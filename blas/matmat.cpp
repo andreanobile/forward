@@ -238,10 +238,12 @@ static int sgemm_nn(blas_arg_t *args, float *sa, float *sb, long mode, float *bb
 }
 
 
-static set<float*> set_a;
+
 
 void matmat(float *a, float *b, float *c, int m, int n, int k, int mode, volatile unsigned long *lock_addr)
 {
+    static set<float*> set_a;
+
     blas_arg_t args;
 
     args.m = n;
