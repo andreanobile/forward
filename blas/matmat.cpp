@@ -76,7 +76,7 @@
 #include <assert.h>
 #include <set>
 #include "matmat.h"
-#include "memory.h"
+#include "blas_memory.h"
 
 
 using namespace std;
