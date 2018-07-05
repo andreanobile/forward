@@ -25,7 +25,7 @@
 #include "kernels.h"
 
 
-float dot_reference(const float *restrict v0, const float *restrict v1, int64_t n)
+float dot_reference(const float * __restrict__ v0, const float * __restrict__ v1, int64_t n)
 {
     int64_t i;
     float tmp = 0.0f;
@@ -36,12 +36,12 @@ float dot_reference(const float *restrict v0, const float *restrict v1, int64_t 
 }
 
 
-void matvec(const float *restrict m, const float *restrict inv, float *restrict outv, int32_t matrix_nrows, int32_t matrix_ncols)
+void matvec(const float * __restrict__ m, const float * __restrict__ inv, float * __restrict__ outv, int32_t matrix_nrows, int32_t matrix_ncols)
 {
     int32_t i;
 
     for(i=0;i<matrix_nrows;i++) {
-        const float *restrict prow = &m[matrix_ncols*i];
+        const float * __restrict__ prow = &m[matrix_ncols*i];
         outv[i] = dot(prow, inv, matrix_ncols);
     }
 }
@@ -50,8 +50,8 @@ void matvec(const float *restrict m, const float *restrict inv, float *restrict 
 void test_dot()
 {
     int len = 109;
-    float *v0 = malloc(len*sizeof(float));
-    float *v1 = malloc(len*sizeof(float));
+    float *v0 = (float*) malloc(len*sizeof(float));
+    float *v1 = (float*) malloc(len*sizeof(float));
     //assert((int64_t)v0%32 == 0);
     //assert((int64_t)v0%32 == 0);
 

@@ -1,6 +1,5 @@
 blas/matmat.cpp
 blas/matmat.h
-blas/memory.c
 blas/memory.h
 blas/sgemm_itcopy_16.c
 blas/sgemm_oncopy_4.c
@@ -52,3 +51,6 @@ nnlib/string_utils.cpp
 nnlib/string_utils.h
 nnlib_test.cpp
 nnlib_test_config.h
+blas/blas_memory.c
+blas/blas_memory.h
+nnlib/matvec.cpp
