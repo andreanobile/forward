@@ -44,20 +44,14 @@ struct NetMem
     list<MemBlk> blks;
     size_t tot_size;
 
-    float *buffer;
-
 
     NetMem()
     {
         tot_size = 0;
-        buffer = 0;
-    }
-    ~NetMem()
-    {
-        if(buffer) free(buffer);
     }
 
-    size_t play_get(size_t amount)
+
+    size_t get_blk(size_t amount)
     {
         auto bestblk = blks.end();
         size_t minsize;
@@ -100,7 +94,8 @@ struct NetMem
         return newblk.start;
     }
 
-    void play_release(size_t index)
+
+    void release_blk(size_t index)
     {
         for(auto &blk : blks) {
             if(index == blk.start) {
@@ -125,6 +120,7 @@ static bool can_execute(Layer *layer, set<string> &buffer_valid)
     }
     return true;
 }
+
 
 static size_t vprod(const vector<size_t> &v) {
 
@@ -180,10 +176,7 @@ bool Net::bind(const vector<size_t> &shape)
 
         layer->bind();
 
-        bool do_inplace = false;//l->inplace_possible && (l->op_type == l->op_relu); // ||
-        //    l->op_type == l->op_scale ||
-        //    l->op_type == l->op_batchnorm);
-        do_inplace = layer->inplace_possible;
+        bool do_inplace = layer->inplace_possible;
 
         size_t idx;
 
@@ -194,7 +187,7 @@ bool Net::bind(const vector<size_t> &shape)
         } else {
             size_t req = vprod(layer->output_shape);
             nfloats += req;
-            idx = pool.play_get(req);
+            idx = pool.get_blk(req);
             outname_to_index[layer->output_name] = idx;
         }
 
@@ -213,7 +206,7 @@ bool Net::bind(const vector<size_t> &shape)
             idx_refcount[li_idx]--;
 
             if(idx_refcount[li_idx] == 0) {
-                pool.play_release(li_idx);
+                pool.release_blk(li_idx);
                 nfloats -= vprod(li->output_shape);
                 maxmem = max(nfloats, maxmem);
             }

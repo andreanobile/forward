@@ -146,6 +146,7 @@ void BatchNormLayer::forward()
     float * __restrict__ pmn = mean->get_data();
 
     if(relu) {
+
         for(size_t i=0;i<nbatch;i++) {
             size_t boffs = i*nch*ninner;
             for(size_t j=0;j<nch;j++) {
@@ -159,10 +160,11 @@ void BatchNormLayer::forward()
 
                 float mn_nrm = mn*nrm;
                 bn_arrays_with_relu(data_in, data_out, ninner, nrm, mn_nrm);
-
             }
         }
+
     } else {
+
         for(size_t i=0;i<nbatch;i++) {
             size_t boffs = i*nch*ninner;
             for(size_t j=0;j<nch;j++) {
@@ -176,8 +178,9 @@ void BatchNormLayer::forward()
 
                 float mn_nrm = mn*nrm;
                 bn_arrays(data_in, data_out, ninner, nrm, mn_nrm);
-
             }
         }
+
     }
+
 }

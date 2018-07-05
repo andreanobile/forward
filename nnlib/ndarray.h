@@ -34,7 +34,14 @@ class ndarray
     bool own_data;
     volatile unsigned long lock;
 
+
 public:
+
+    std::vector<size_t> shape;
+
+    ndarray &operator=(ndarray &a) = delete;
+    ndarray &operator=(const ndarray &a) = delete;
+
     volatile unsigned long *get_lock_address()
     {
         return &lock;
@@ -69,6 +76,7 @@ public:
         return num_elements;
     }
 
+
     void allocate(const std::vector<size_t> &s)
     {
         own_data = true;
@@ -81,10 +89,10 @@ public:
             std::cout << "failed to allocate ndarray" << std::endl;
             abort();
         }
-        //data = (float*) malloc(sizeof(float)*sz);
         shape = s;
         num_elements = sz;
     }
+
 
     void attach(float *buf, const std::vector<size_t> &s)
     {
@@ -93,6 +101,7 @@ public:
         own_data = false;
         num_elements = num_elements_from_shape(s);
     }
+
 
     size_t num_elements_from_shape(const std::vector<size_t> &s) const
     {
@@ -105,10 +114,12 @@ public:
         return sz;
     }
 
+
     size_t num_elements_from_shape() const
     {
         return num_elements_from_shape(shape);
     }
+
 
     void clear()
     {
@@ -119,24 +130,27 @@ public:
         }
     }
 
+
     void reshape(const std::vector<size_t> &newshape)
     {
         assert(num_elements == num_elements_from_shape(newshape));
         shape = newshape;
     }
 
+
     void zero()
     {
         memset(data, 0, num_elements*sizeof(float));
     }
 
+
     float &element(int i0, int i1)
     {
         int index = i0*shape[1] + i1;
-        //std::cout << i0 << " " << i1 << std::endl;
         //assert(index < num_elements);
         return data[index];
     }
+
 
     float &element(int i0, int i1, int i2, int i3)
     {
@@ -152,11 +166,6 @@ public:
         memcpy(data, arr->get_data(), num_elements*sizeof(float));
         reshape(arr->shape);
     }
-
-    std::vector<size_t> shape;
-
-    ndarray &operator=(ndarray &a) = delete;
-    ndarray &operator=(const ndarray &a) = delete;
 
 };
 
