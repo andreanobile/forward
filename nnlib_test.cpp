@@ -23,7 +23,10 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <gd.h>
+#include <thread>
 #include <math.h>
+
 #include "nnlib_test_config.h"
 #include "nnlib.h"
 #include "caffe_loader.h"
@@ -36,10 +39,17 @@
 #include "chrono.h"
 #include "string_utils.h"
 
-#include <gd.h>
-#include <thread>
 
 using namespace std;
+
+
+struct PreprocessInfo
+{
+    size_t h;
+    size_t w;
+    int* perm_channels;
+    float *means;
+};
 
 
 vector<string> load_synset(const string &fname)
@@ -108,15 +118,6 @@ void ndarray_cmp(ndarray *d0, ndarray *d1)
         cout << " value = " << maxdiff << endl;
     }
 }
-
-
-struct PreprocessInfo
-{
-    size_t h;
-    size_t w;
-    int* perm_channels;
-    float *means;
-};
 
 
 void load_and_preprocess_image(const string &fname, const PreprocessInfo &info, ndarray &input_image)
@@ -325,11 +326,13 @@ int main(int argc, char *argv[])
     int num_args_no_pic = 2;
 
     if(argc > num_args_no_pic) {
-        int num_pic = argc - num_args_no_pic;
 
+        int num_pic = argc - num_args_no_pic;
         int iarg = num_args_no_pic;
         int pics_to_do = num_pic;
+
         while(pics_to_do) {
+
             nthreads = min(pics_to_do, nthreads);
 
             for(int i=0;i<nthreads-1;i++) {
