@@ -22,7 +22,7 @@
 #include <string>
 
 
-void load_caffe_prototxt(const std::string &fname);
+//void load_caffe_prototxt(const std::string &fname);
 
 #endif // NNLIB_H
 
