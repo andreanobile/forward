@@ -197,7 +197,6 @@ void ConvLayer::im2col(ndarray *im, ndarray *result, size_t ksz, size_t stride)
 
 void ConvLayer::forward()
 {
-    //cout << "conv " << name << " forward" << endl;
 
     ndarray *input = input_arrays[0].get();
     ndarray *output = output_array.get();
@@ -283,7 +282,7 @@ void ConvLayer::forward()
 
         }
     }
-    //add bias
+
 
     if(has_bias) {
 
@@ -303,8 +302,6 @@ void ConvLayer::forward()
             }
         }
     }
-
-    return;
 
 
 #else

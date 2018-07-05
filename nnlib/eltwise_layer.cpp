@@ -65,7 +65,6 @@ static inline void add_arrays(float * __restrict__ in0, float * __restrict__ in1
 
 void EltWiseLayer::forward()
 {
-    //cout << "eltwise_sum " << name << " forward" << endl;
 
     size_t nch;
     ndarray *input0 = input_arrays[0].get();
