@@ -34,7 +34,6 @@ nnlib/ndarray.h
 nnlib/net.cpp
 nnlib/net.h
 nnlib/network_node.h
-nnlib/nnlib.cpp
 nnlib/nnlib.h
 nnlib/pooling_layer.cpp
 nnlib/pooling_layer.h

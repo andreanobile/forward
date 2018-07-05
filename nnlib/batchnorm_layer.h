@@ -29,16 +29,15 @@ class BatchNormLayer : public Layer
     float eps;
     bool precompute_done;
 
-
-
-    void precompute();
     std::shared_ptr<ndarray> mean;
     std::shared_ptr<ndarray> variance;
     std::shared_ptr<ScaleLayer> scale_layer;
 
-public:
-    BatchNormLayer();
+    void precompute();
 
+public:
+
+    BatchNormLayer();
 
     virtual void bind(const std::vector<std::vector<size_t>> &shapes);
     virtual void forward();

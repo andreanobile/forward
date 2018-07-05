@@ -50,7 +50,6 @@ void BatchNormLayer::bind(const vector<vector<size_t>> &shapes)
     if(!precompute_done) precompute();
 
     log_bind();
-    //cout << "bn scale = " << scale << endl;
 }
 
 
@@ -131,7 +130,6 @@ static inline void bn_arrays_with_relu(float * __restrict__ data_in, float * __r
 
 void BatchNormLayer::forward()
 {
-    //cout << "bn " << name << " forward" << endl;
 
     ndarray *input = input_arrays[0].get();
     ndarray *output = output_array.get();
@@ -146,6 +144,7 @@ void BatchNormLayer::forward()
     float * __restrict__ dout = output->get_data();
     float * __restrict__ pnrm = variance->get_data();
     float * __restrict__ pmn = mean->get_data();
+
     if(relu) {
         for(size_t i=0;i<nbatch;i++) {
             size_t boffs = i*nch*ninner;

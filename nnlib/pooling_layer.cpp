@@ -22,6 +22,7 @@
 
 using namespace std;
 
+
 PoolingLayer::PoolingLayer()
 {
     op_type = op_pool;
@@ -65,7 +66,6 @@ void PoolingLayer::bind(const vector<vector<size_t>> &shapes)
 
 void PoolingLayer::forward()
 {
-    //cout << "pooling " << name << " forward" << endl;
 
     ndarray *input = input_arrays[0].get();
     ndarray *output = output_array.get();
@@ -99,8 +99,8 @@ void PoolingLayer::forward()
                     int hend = min(hstart + kernel_size, nh);
                     int wend = min(wstart + kernel_size, nw);
 
-
                     if(pooling_method == pool_max) {
+
                         float mx = -1e20f;
                         for (int h = hstart; h < hend; h++) {
                             for (int w = wstart; w < wend; w++) {
@@ -112,8 +112,9 @@ void PoolingLayer::forward()
                         }
                         obuf[k]=mx;
                         k++;
-                    }
-                    else if(pooling_method == pool_ave) {
+
+                    } else if(pooling_method == pool_ave) {
+
                         float mx = 0.0f;
                         float pool_size = (hend - hstart) * (wend - wstart);
                         for (int h = hstart; h < hend; h++) {

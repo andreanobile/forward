@@ -63,6 +63,7 @@ static inline void scale_with_bias(float * __restrict__ data_in, float * __restr
     }
 }
 
+
 static inline void scale(float * __restrict__ data_in, float * __restrict__ data_out,
                          size_t n, float scale, bool do_relu)
 {
@@ -77,10 +78,9 @@ static inline void scale(float * __restrict__ data_in, float * __restrict__ data
     }
 }
 
+
 void ScaleLayer::forward()
 {
-    //cout << "scale " << name << " forward" << endl;
-
     size_t nch;
     ndarray *input = input_arrays[0].get();
     ndarray *output = output_array.get();
@@ -112,6 +112,4 @@ void ScaleLayer::forward()
 
         }
     }
-
-    //output->dump(name + "_dump");
 }

@@ -162,6 +162,7 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, shared_ptr<NetworkNode> para
     }
 }
 
+
 template<typename T>
 static void copylayer(Layer *n, Layer*o)
 {
@@ -169,6 +170,7 @@ static void copylayer(Layer *n, Layer*o)
     auto ot = static_cast<T*>(o);
     *nt = *ot;
 }
+
 
 shared_ptr<Layer> copy_layer(Layer *l)
 {
