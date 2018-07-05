@@ -18,16 +18,18 @@
 
 #include <assert.h>
 #include <stdint.h>
-#include <stdlib.h>
+#include <vector>
+
+using namespace std;
 
 #include <immintrin.h>
 #include <stdio.h>
 #include "kernels.h"
 
 
-float dot_reference(const float * __restrict__ v0, const float * __restrict__ v1, int64_t n)
+float dot_reference(const float * __restrict__ v0, const float * __restrict__ v1, size_t n)
 {
-    int64_t i;
+    size_t i;
     float tmp = 0.0f;
     for(i=0;i<n;i++) {
         tmp += v0[i]*v1[i];
@@ -38,7 +40,7 @@ float dot_reference(const float * __restrict__ v0, const float * __restrict__ v1
 
 void matvec(const float * __restrict__ m, const float * __restrict__ inv, float * __restrict__ outv, int32_t matrix_nrows, int32_t matrix_ncols)
 {
-    int32_t i;
+    int i;
 
     for(i=0;i<matrix_nrows;i++) {
         const float * __restrict__ prow = &m[matrix_ncols*i];
@@ -50,22 +52,19 @@ void matvec(const float * __restrict__ m, const float * __restrict__ inv, float 
 void test_dot()
 {
     int len = 109;
-    float *v0 = (float*) malloc(len*sizeof(float));
-    float *v1 = (float*) malloc(len*sizeof(float));
-    //assert((int64_t)v0%32 == 0);
-    //assert((int64_t)v0%32 == 0);
+
+    vector<float> v0(len);
+    vector<float> v1(len);
 
     int i;
     for(i=0;i<len;i++) {
-        v0[i] = 1.0;//drand48();
-        v1[i] = 1.0;//drand48();
+        v0[i] = drand48();
+        v1[i] = drand48();
     }
 
-    float ref = dot_reference(v0, v1, len);
+    float ref = dot_reference(v0.data(), v1.data(), len);
     printf("ref = %f \n", ref);
-    float act = dot(v0, v1, len);
+    float act = dot(v0.data(), v1.data(), len);
     printf("act = %f \n", act);
 
-    free(v0);
-    free(v1);
 }
