@@ -27,6 +27,8 @@
 using namespace std;
 
 
+
+
 struct NetMem
 {
     struct MemBlk
@@ -136,25 +138,13 @@ static size_t vprod(const vector<size_t> &v) {
 
 Net::Net()
 {   
-    fmap_buffer = 0;
+
 }
 
 
 Net::~Net()
 {
-    if(fmap_buffer) free(fmap_buffer);
-}
 
-
-void Net::allocate_fmap_buffer(size_t nelem)
-{
-    if(fmap_buffer) free(fmap_buffer);
-
-    int ret = posix_memalign((void**)&fmap_buffer, 64, sizeof(float)*nelem);
-    if(ret) {
-        cout << "failed to allocte fmap_buffer ! \n";
-        abort();
-    }
 }
 
 
@@ -224,7 +214,7 @@ bool Net::bind(const vector<size_t> &shape)
     cout << "maxmem = " << maxmem << " floats" << endl;
     cout << "pool maxmem = " << pool.tot_size << " floats" << endl;
 
-    allocate_fmap_buffer(pool.tot_size);
+    fmap_buffer.allocate(pool.tot_size);
 
     for(auto layer : layers) {
         shared_ptr<ndarray> oarr(new ndarray());

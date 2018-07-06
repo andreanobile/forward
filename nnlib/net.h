@@ -34,6 +34,9 @@
 #include "batchnorm_layer.h"
 #include "rename_table.h"
 #include "network_node.h"
+#include "aligned_buffer.h"
+
+
 
 class Net
 {
@@ -41,7 +44,7 @@ class Net
     std::map<std::string, Layer*> out_name_to_layer;
     std::list<std::shared_ptr<Layer>> layers;
     std::vector<Layer*> vsched;
-    float *fmap_buffer;
+    AlignedBuffer fmap_buffer;
 
     std::vector<Layer*> input_layers;
     std::vector<Layer*> output_layers;
@@ -52,7 +55,6 @@ class Net
     }
 
     void remove_layer(std::shared_ptr<Layer> &layer);
-    void allocate_fmap_buffer(size_t nelem);
 
 public:
 
