@@ -96,6 +96,7 @@ public:
 
     void attach(float *buf, const std::vector<size_t> &s)
     {
+        clear();
         shape = s;
         data = buf;
         own_data = false;
