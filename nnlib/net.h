@@ -44,7 +44,7 @@ class Net
     std::map<std::string, Layer*> out_name_to_layer;
     std::list<std::shared_ptr<Layer>> layers;
     std::vector<Layer*> vsched;
-    AlignedBuffer fmap_buffer;
+    AlignedBuffer<float, 64> fmap_buffer;
 
     std::vector<Layer*> input_layers;
     std::vector<Layer*> output_layers;

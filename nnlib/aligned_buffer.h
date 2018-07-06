@@ -4,9 +4,11 @@
 #include <stdlib.h>
 #include <iostream>
 
+
+template<typename T, int ALIGN>
 struct AlignedBuffer
 {
-    float *data;
+    T *data;
 
     void clear()
     {
@@ -18,7 +20,7 @@ struct AlignedBuffer
     {
         clear();
 
-        int ret = posix_memalign((void**)&data, 64, sizeof(float)*nelem);
+        int ret = posix_memalign((void**)&data, ALIGN, sizeof(T)*nelem);
         if(ret) {
             std::cout << "failed to allocate fmap_buffer ! \n";
             abort();
