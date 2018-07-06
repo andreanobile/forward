@@ -145,7 +145,7 @@ vector<shared_ptr<ndarray>> CaffeLoader::load_data_files(const string &caffe_nam
 
     for(int i=0;i<nfiles;i++) {
         string fname = caffe_name + "_" + to_string(i) + ".dat";
-        data_arrays.push_back(ndarray_from_data(path_join(path, fname)));
+        data_arrays.push_back(ndarray_from_file(path_join(path, fname)));
     }
 
     return data_arrays;

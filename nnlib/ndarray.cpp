@@ -33,12 +33,12 @@ void ndarray::dump(const std::string &fname)
 }
 
 
-shared_ptr<ndarray> ndarray_from_data(const string &fname)
+unique_ptr<ndarray> ndarray_from_file(const string &fname)
 {
     if(file_exists(fname)) {
 
         size_t sz = file_size(fname);
-        shared_ptr<ndarray> data(new ndarray());
+        unique_ptr<ndarray> data(new ndarray());
         vector<size_t> vsize;
         vsize.push_back(sz/sizeof(float));
         data->allocate(vsize);

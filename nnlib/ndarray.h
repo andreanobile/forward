@@ -170,6 +170,6 @@ public:
 
 };
 
-std::shared_ptr<ndarray> ndarray_from_data(const std::string &fname);
+std::unique_ptr<ndarray> ndarray_from_file(const std::string &fname);
 
 #endif // NDARRAY_H
