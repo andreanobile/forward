@@ -20,7 +20,7 @@ struct AlignedBuffer
 
         int ret = posix_memalign((void**)&data, 64, sizeof(float)*nelem);
         if(ret) {
-            std::cout << "failed to allocte fmap_buffer ! \n";
+            std::cout << "failed to allocate fmap_buffer ! \n";
             abort();
         }
     }
@@ -43,10 +43,6 @@ struct AlignedBuffer
         clear();
     }
 
-    float & operator[](size_t idx) const
-    {
-        return data[idx];
-    }
 
     float & operator[](size_t idx)
     {
