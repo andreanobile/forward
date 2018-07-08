@@ -50,6 +50,7 @@ public:
         weights = p;
         precompute_done = false;
     }
+
     void set_bias(std::shared_ptr<ndarray> p)
     {
         bias = p;

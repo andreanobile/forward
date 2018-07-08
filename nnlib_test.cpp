@@ -114,7 +114,7 @@ void ndarray_cmp(ndarray *d0, ndarray *d1)
     }
     if(maxi >=0 ) {
         cout << "max diff at " << maxi << " " << d0->get_data()[maxi] << " " << d1->get_data()[maxi] ;
-        cout << " value = " << maxdiff << endl;
+        cout << " value = " << maxdiff << '\n';
     }
 }
 
@@ -188,8 +188,8 @@ void load_and_preprocess_image_gd(const string &fname,
     int h = info.h;
 
     if(!in->trueColor) {
-        printf("image not truecolor! \n");
-        exit(0);
+        cout << "image not truecolor! \n";
+        abort();
     }
 
     float * __restrict__ idata = input_image.get_data();

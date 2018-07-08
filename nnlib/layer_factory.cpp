@@ -35,12 +35,6 @@
 using namespace std;
 
 
-template<typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args)
-{
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
-
 
 shared_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
 {
