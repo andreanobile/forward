@@ -25,10 +25,8 @@
 #include <map>
 #include <stack>
 #include <memory>
-
 #include "caffe_loader.h"
 #include "net.h"
-
 #include "string_utils.h"
 #include "file_utils.h"
 #include "ndarray.h"
@@ -54,7 +52,6 @@ void CaffeLoader::init_caffe_layer_to_layer_type()
     caffe_layer_type_to_layer_type.insert({"Eltwise", Layer::op_eltwise_sum});
     caffe_layer_type_to_layer_type.insert({"Softmax", Layer::op_softmax});
 }
-
 
 
 Layer::Type CaffeLoader::map_layer(const std::string &type)
@@ -217,7 +214,6 @@ unique_ptr<Net> CaffeLoader::build_network(const CaffeNetworkDescription &desc)
 
     return net;
 }
-
 
 
 unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &data_dir)

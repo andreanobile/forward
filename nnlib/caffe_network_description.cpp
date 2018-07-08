@@ -3,7 +3,6 @@
 #include <stack>
 #include <vector>
 #include <string>
-
 #include <iostream>
 
 #include "caffe_network_description.h"
@@ -18,14 +17,15 @@ CaffeNetworkDescription::CaffeNetworkDescription()
     init_open_of_close();
 }
 
+
 CaffeNetworkDescription::CaffeNetworkDescription(stringstream &ss)
 {
     root = new NetworkNode;
     init_open_of_close();
 
     build_from_caffe_prototxt(ss);
-
 }
+
 
 CaffeNetworkDescription::~CaffeNetworkDescription()
 {
@@ -77,6 +77,7 @@ void CaffeNetworkDescription::check_match(char ch)
         abort();
     }
 }
+
 
 void CaffeNetworkDescription::build_from_caffe_prototxt(stringstream &ss)
 {
