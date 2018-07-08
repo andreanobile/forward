@@ -35,11 +35,6 @@ struct NetMem
         size_t start;
         size_t sz;
         bool valid;
-
-        MemBlk()
-        {
-            valid = true;
-        }
     };
 
     list<MemBlk> blks;
