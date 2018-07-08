@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <math.h>
 #include "pooling_layer.h"
 
 using namespace std;
