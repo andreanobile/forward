@@ -16,7 +16,7 @@
  *                                                                              *
  *******************************************************************************/
 
-#include <list>
+//#include <list>
 #include <set>
 #include <stack>
 #include <vector>
@@ -49,25 +49,25 @@ CaffeNetworkDescription::~CaffeNetworkDescription()
     if(!root) return;
 
     NetworkNode *node = root;
-    list<NetworkNode*> queue;
+    stack<NetworkNode*> node_stack;
     set<NetworkNode*> deleted;
-    queue.push_back(node);
+    node_stack.push(node);
 
-    while(!queue.empty()) {
+    while(!node_stack.empty()) {
 
-        node = queue.back();
+        node = node_stack.top();
 
         bool can_delete = true;
         for(auto child: node->childs) {
             if(deleted.find(child) == deleted.end()) {
-                queue.push_back(child);
+                node_stack.push(child);
                 can_delete = false;
             }
         }
 
         if(node->childs.size() == 0 || can_delete) {
             delete node;
-            queue.remove(node);
+            node_stack.pop();
             deleted.insert(node);
         }
 
