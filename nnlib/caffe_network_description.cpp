@@ -149,12 +149,6 @@ void CaffeNetworkDescription::build_from_caffe_prototxt(stringstream &ss)
 }
 
 
-void CaffeNetworkDescription::rewrite_network()
-{
-    rewrite_network(root);
-}
-
-
 void CaffeNetworkDescription::rewrite_network(const NetworkNode *node)
 {
     for(auto &prop : node->properties ) {
@@ -171,4 +165,10 @@ void CaffeNetworkDescription::rewrite_network(const NetworkNode *node)
         rewrite_network(pc);
         cout << "}" << endl;
     }
+}
+
+
+void CaffeNetworkDescription::rewrite_network()
+{
+    rewrite_network(root);
 }
