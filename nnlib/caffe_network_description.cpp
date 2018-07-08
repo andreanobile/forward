@@ -40,7 +40,6 @@ CaffeNetworkDescription::CaffeNetworkDescription(stringstream &ss)
 {
     root = new NetworkNode;
     init_open_of_close();
-
     build_from_caffe_prototxt(ss);
 }
 
@@ -50,28 +49,26 @@ CaffeNetworkDescription::~CaffeNetworkDescription()
     if(!root) return;
 
     NetworkNode *node = root;
-    int ndel = 0;
     list<NetworkNode*> queue;
     set<NetworkNode*> deleted;
     queue.push_back(node);
 
     while(!queue.empty()) {
 
-        NetworkNode *nn = queue.back();
+        node = queue.back();
 
         bool can_delete = true;
-        for(NetworkNode *child: nn->childs) {
+        for(auto child: node->childs) {
             if(deleted.find(child) == deleted.end()) {
                 queue.push_back(child);
                 can_delete = false;
             }
         }
 
-        if(nn->childs.size() == 0 || can_delete) {
-            delete nn;
-            queue.remove(nn);
-            deleted.insert(nn);
-            ndel++;
+        if(node->childs.size() == 0 || can_delete) {
+            delete node;
+            queue.remove(node);
+            deleted.insert(node);
         }
 
     }

@@ -18,6 +18,7 @@
 
 #ifndef CAFFE_LOADER_H
 #define CAFFE_LOADER_H
+
 #include <string>
 #include <sstream>
 #include <map>
