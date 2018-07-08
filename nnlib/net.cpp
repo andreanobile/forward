@@ -35,6 +35,9 @@ struct NetMem
         size_t start;
         size_t sz;
         bool valid;
+
+        MemBlk(size_t start, size_t sz) : start(start), sz(sz), valid(true)
+        { }
     };
 
     list<MemBlk> blks;
@@ -79,10 +82,7 @@ struct NetMem
             }
         }
 
-        MemBlk newblk;
-        newblk.start = index + sz;
-        newblk.sz = amount;
-        newblk.valid = true;
+        MemBlk newblk(index + sz, amount);
 
         blks.push_back(newblk);
         tot_size += amount;
