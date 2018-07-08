@@ -174,7 +174,7 @@ void CaffeLoader::add_layer(Net *net, const NetworkNode &caffe_layer)
         auto top_layers = caffe_layer.properties.equal_range("top");
         if(caffe_layer.properties.count("top") > 1) {
             cout << "wrong assumption in number of tops at layer " << it->second << endl;
-            exit(0);
+            abort();
         }
 
         string output;
@@ -234,6 +234,6 @@ unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &da
 
     } else {
         cout << string("cannot open file ") + string(fname) << endl;
-        exit(0);
+        abort();
     }
 }

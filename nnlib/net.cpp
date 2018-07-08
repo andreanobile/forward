@@ -28,7 +28,6 @@ using namespace std;
 
 
 
-
 struct NetMem
 {
     struct MemBlk
@@ -274,7 +273,7 @@ void Net::schedule()
                     for(auto l: pqueue) {
                         cout << l->name << endl;
                     }
-                    exit(0);
+                    abort();
                 }
                 rstart = true;
                 no_exec = true;
