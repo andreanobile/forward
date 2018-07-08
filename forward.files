@@ -54,3 +54,5 @@ blas/blas_memory.c
 blas/blas_memory.h
 nnlib/matvec.cpp
 nnlib/aligned_buffer.h
+nnlib/caffe_network_description.h
+nnlib/caffe_network_description.cpp

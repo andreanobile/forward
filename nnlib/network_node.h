@@ -32,7 +32,7 @@ struct NetworkNode
 {
     NodeType node_type;
     std::multimap<std::string, std::string> properties;
-    std::vector<std::shared_ptr<NetworkNode>> childs;
+    std::vector<NetworkNode*> childs;
 
     std::string get_inner_prop(const std::string &prop) const
     {

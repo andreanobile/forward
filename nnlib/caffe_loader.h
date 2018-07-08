@@ -27,24 +27,21 @@
 #include "network_node.h"
 #include "net.h"
 #include "layer.h"
-
+#include "caffe_network_description.h"
 
 class CaffeLoader
 {
     std::map<std::string, Layer::Type> caffe_layer_type_to_layer_type;
     std::map<std::string, int> caffe_layer_type_to_num_data_arrays;
-    std::map<char, char> open_of_close;
-    std::stack<char> par_stack;
+
     std::string data_files_path;
 
     Layer::Type map_layer(const std::string &type);
     int num_data_arrays(Layer::Type layer_type);
-    void init_open_of_close();
+
     void init_caffe_layer_to_layer_type();
-    void check_match(char ch);
-    std::shared_ptr<NetworkNode> parse_caffe_prototxt(std::stringstream &ss);
-    void rewrite_network(const NetworkNode &root);
-    std::unique_ptr<Net> build_network(const NetworkNode &root);
+
+    std::unique_ptr<Net> build_network(const CaffeNetworkDescription &desc);
     void add_layer(Net *net, const NetworkNode &caffe_layer);
     void load_layer_data(Layer* layer, const NetworkNode &caffe_layer);
 
