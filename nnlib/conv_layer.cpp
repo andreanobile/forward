@@ -113,7 +113,6 @@ void ConvLayer::im2col(ndarray *im, ndarray *result, size_t ksz, size_t stride)
     nh = im->shape[2];
     nw = im->shape[3];
 
-
     float * __restrict__ obuf = result->get_data();
     float * __restrict__ ibuf = im->get_data();
 
@@ -124,40 +123,27 @@ void ConvLayer::im2col(ndarray *im, ndarray *result, size_t ksz, size_t stride)
         size_t k=0;
         for(ich=0;ich<nch;ich++) {
             size_t choffs = ich*(nh*nw);
-
-
             for(i=0;i<ksz;i++) {
                 size_t khoffs = i*nw;
                 for(j=0;j<ksz;j++) {
-
                     for(size_t ih=0;ih<=max_starty;ih+=stride) {
                         size_t hoffs = ih*nw;
                         for(size_t iw=0;iw<=max_startx;iw+=stride) {
-
                             float val = ibuf[choffs+hoffs+iw+khoffs+j];
                             obuf[k] = val;
                             k++;
-
                         }
                     }
-
                 }
-
             }
-
-
         }
     } else {
-
         size_t k=0;
         for(ich=0;ich<nch;ich++) {
             size_t choffs = ich*(nh*nw);
-
-
             for(i=0;i<ksz;i++) {
                 size_t khoffs = i*nw;
                 for(j=0;j<ksz;j++) {
-
                     for(size_t ih=0;ih<=max_starty;ih++) {
                         size_t hoffs = ih*nw;
 #ifdef IM2COL_USE_MEMCPY
@@ -170,20 +156,12 @@ void ConvLayer::im2col(ndarray *im, ndarray *result, size_t ksz, size_t stride)
                             k++;
                         }
 #endif
-
                     }
-
                 }
-
             }
-
-
         }
-
     }
-
 }
-
 
 
 void ConvLayer::forward()
@@ -215,7 +193,6 @@ void ConvLayer::forward()
         padded_input.allocate({nbatch, nch, nph, npw});
         padded_input.zero();
         ibuf = padded_input.get_data();
-
         //copy input data into padded array
         for(size_t ib=0;ib<nbatch;ib++) {
             size_t boffs = ib*(nch*nh*nw);
@@ -224,12 +201,10 @@ void ConvLayer::forward()
                 size_t choffs = ich*(nh*nw);
                 size_t chpoffs = ich*(nph*npw);
                 size_t iph = pad_size;
-
                 for(size_t ih=0;ih<nh;ih++) {
                     memcpy(&ibuf[bpoffs+chpoffs + iph*npw + pad_size], &iorig[boffs + choffs + ih*nw], sizeof(float)*nw);
                     iph++;
                 }
-
             }
         }
 
@@ -250,13 +225,11 @@ void ConvLayer::forward()
         ndarray oa;
 
         for(size_t ib=0;ib<output_shape[0];ib++) {
-
             im.attach(ibuf+ib*nch*npw*nph, {1, nch, nph, npw});
             im2col(&im, &im2col_buffer, kernel_size, stride_size);
             assert(m*n*output_shape[0] == output->n_elements());
             oa.attach(output->get_data()+ib*m*n, {m, n});
             matmul(weights.get(), &im2col_buffer, &oa, m, n, k);
-
         }
 
     } else { //kernel_size==1 and stride==1
@@ -265,12 +238,10 @@ void ConvLayer::forward()
         ndarray oa;
 
         for(size_t ib=0;ib<output_shape[0];ib++) {
-
             assert(m*n*output_shape[0] == output->n_elements());
             im.attach(ibuf+ib*nch*npw*nph, {1, nch, nph, npw});
             oa.attach(output->get_data()+ib*m*n, {m, n});
             matmul(weights.get(), &im, &oa, m, n, k);
-
         }
     }
 

@@ -127,7 +127,6 @@ static inline void bn_arrays(float * __restrict__ data_in, float * __restrict__ 
 
 void BatchNormLayer::forward()
 {
-
     ndarray *input = input_arrays[0].get();
     ndarray *output = output_array.get();
     size_t nch = mean->shape[0];

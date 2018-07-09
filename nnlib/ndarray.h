@@ -75,7 +75,6 @@ public:
         return num_elements;
     }
 
-
     void allocate(const std::vector<size_t> &s)
     {
         own_data = true;
@@ -92,7 +91,6 @@ public:
         num_elements = sz;
     }
 
-
     void attach(float *buf, const std::vector<size_t> &s)
     {
         clear();
@@ -101,7 +99,6 @@ public:
         own_data = false;
         num_elements = num_elements_from_shape(s);
     }
-
 
     size_t num_elements_from_shape(const std::vector<size_t> &s) const
     {
@@ -114,12 +111,10 @@ public:
         return sz;
     }
 
-
     size_t num_elements_from_shape() const
     {
         return num_elements_from_shape(shape);
     }
-
 
     void clear()
     {
@@ -130,19 +125,16 @@ public:
         }
     }
 
-
     void reshape(const std::vector<size_t> &newshape)
     {
         assert(num_elements == num_elements_from_shape(newshape));
         shape = newshape;
     }
 
-
     void zero()
     {
         memset(data, 0, num_elements*sizeof(float));
     }
-
 
     float &element(int i0, int i1)
     {
@@ -150,7 +142,6 @@ public:
         //assert(index < num_elements);
         return data[index];
     }
-
 
     float &element(int i0, int i1, int i2, int i3)
     {
@@ -168,6 +159,7 @@ public:
     }
 
 };
+
 
 std::unique_ptr<ndarray> ndarray_from_file(const std::string &fname);
 
