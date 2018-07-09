@@ -27,7 +27,6 @@
 using namespace std;
 
 
-
 struct NetMem
 {
     struct MemBlk

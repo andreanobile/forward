@@ -34,7 +34,6 @@ class ndarray
     bool own_data;
     volatile unsigned long lock;
 
-
 public:
 
     std::vector<size_t> shape;
@@ -162,10 +161,10 @@ public:
 
     void dump(const std::string &fname);
 
-    void copy_from(ndarray *arr) {
-        assert(num_elements == arr->n_elements());
-        memcpy(data, arr->get_data(), num_elements*sizeof(float));
-        reshape(arr->shape);
+    void copy_from(ndarray &arr) {
+        assert(num_elements == arr.n_elements());
+        memcpy(data, arr.get_data(), num_elements*sizeof(float));
+        reshape(arr.shape);
     }
 
 };

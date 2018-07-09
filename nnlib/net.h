@@ -86,7 +86,7 @@ public:
         }
     }
 
-    void copy_to_input(ndarray *inp)
+    void copy_to_input(ndarray &inp)
     {
         get_input_array()->copy_from(inp);
     }
@@ -97,8 +97,6 @@ public:
     }
 
     void copy_net_sharing_weights(Net &original);
-
-
 
 };
 

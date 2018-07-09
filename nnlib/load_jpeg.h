@@ -51,4 +51,3 @@ public:
 
 
 #endif // LOAD_JPEG_H
-

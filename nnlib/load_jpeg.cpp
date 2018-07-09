@@ -67,6 +67,3 @@ void JpegLoader::load_and_decode_jpeg(const string &fname, RGBImage &ret)
 
     }
 }
-
-
-

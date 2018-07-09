@@ -24,9 +24,9 @@
 #include <sstream>
 #include <algorithm>
 #include <numeric>
-#include <gd.h>
 #include <thread>
 #include <math.h>
+#include <gd.h>
 
 #include "nnlib_test_config.h"
 #include "caffe_loader.h"
@@ -273,7 +273,7 @@ void net_forward_on_image(Net *net, const string& imfname, const vector<size_t> 
     info.means = means;
     load_and_preprocess_image_gd(imfname, info, input_image);
 
-    net->copy_to_input(&input_image);
+    net->copy_to_input(input_image);
     net->forward();
 }
 

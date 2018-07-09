@@ -49,7 +49,6 @@ unique_ptr<ndarray> ndarray_from_file(const string &fname)
             abort();
         }
         fclose(f);
-        //cout << "loaded " << fname << " " << to_string(vsize[0]) << " floats" << endl;
         return data;
 
     } else {
