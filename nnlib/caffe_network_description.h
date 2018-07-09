@@ -47,7 +47,6 @@ public:
     void build_from_caffe_prototxt(std::stringstream &ss);
     void rewrite_network();
 
-
 };
 
 #endif // CAFFENETWORKDESCRIPTION_H

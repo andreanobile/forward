@@ -26,7 +26,7 @@
 #define avx_madd(a, b, c) _mm256_fmadd_ps((a), (b), (c))
 
 
-float dot(const float *restrict v0, const float *restrict v1, size_t n)
+float dot(const float * __restrict__ v0, const float * __restrict__ v1, size_t n)
 {
     size_t i;
 
@@ -42,7 +42,7 @@ float dot(const float *restrict v0, const float *restrict v1, size_t n)
     vout0 = _mm256_setzero_ps();
     vout1 = _mm256_setzero_ps();
 
-    uint64_t n16 = n >> 4;
+    size_t n16 = n >> 4;
 
     v8sf v0_0, v0_1, v1_0, v1_1;
 
@@ -53,14 +53,14 @@ float dot(const float *restrict v0, const float *restrict v1, size_t n)
         v1_0 = _mm256_loadu_ps(v1 + 0);
         v1_1 = _mm256_loadu_ps(v1 + 8);
 
-        vout0 = avx_madd(v0_0, v1_0, vout0);
-        vout1 = avx_madd(v0_1, v1_1, vout1);
+        vout0 = _mm256_fmadd_ps(v0_0, v1_0, vout0);
+        vout1 = _mm256_fmadd_ps(v0_1, v1_1, vout1);
         v0+=16;
         v1+=16;
     }
 
 
-    vout0 = avx_addps(vout0, vout1);
+    vout0 = _mm256_add_ps(vout0, vout1);
 
 
     float *pvout = (float*) &vout0;

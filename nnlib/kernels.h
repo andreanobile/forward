@@ -22,16 +22,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 float dot(const float *__restrict__ v0, const float *__restrict__ v1, size_t n);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 void matvec(const float *__restrict__ m, const float *__restrict__ inv, float *__restrict__ outv,
             int32_t matrix_nrows, int32_t matrix_ncols);

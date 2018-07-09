@@ -11,7 +11,7 @@ nnlib/chrono.cpp
 nnlib/chrono.h
 nnlib/conv_layer.cpp
 nnlib/conv_layer.h
-nnlib/dot.c
+nnlib/dot.cpp
 nnlib/eltwise_layer.cpp
 nnlib/eltwise_layer.h
 nnlib/fc_layer.cpp
