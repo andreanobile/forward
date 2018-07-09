@@ -22,7 +22,7 @@ struct AlignedBuffer
 
         int ret = posix_memalign((void**)&data, ALIGN, sizeof(T)*nelem);
         if(ret) {
-            std::cout << "failed to allocate fmap_buffer ! \n";
+            std::cout << "failed to allocate aligned buffer ! \n";
             abort();
         }
     }
