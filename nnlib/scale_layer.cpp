@@ -89,10 +89,7 @@ void ScaleLayer::forward()
     //check that data shape matches with layer shape
     assert(input->shape[1] == nch);
     assert(output->shape[1] == nch);
-
     size_t nbatch = input->shape[0];
-
-    const bool do_relu = relu;
 
     for(size_t i=0;i<nbatch;i++) {
         size_t boffs = i*nch*ninner;
@@ -105,9 +102,9 @@ void ScaleLayer::forward()
 
             if(has_bias) {
                 float bias_param = bias->get_data()[j];
-                scale_with_bias(data_in, data_out, ninner, scale_param, bias_param, do_relu);
+                scale_with_bias(data_in, data_out, ninner, scale_param, bias_param, relu);
             } else {
-                scale(data_in, data_out, ninner, scale_param, do_relu);
+                scale(data_in, data_out, ninner, scale_param, relu);
             }
 
         }
