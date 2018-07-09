@@ -178,7 +178,7 @@ void CaffeLoader::add_layer(Net *net, const NetworkNode &caffe_layer)
         }
 
         string output;
-        auto tp=top_layers.first;
+        auto tp = top_layers.first;
         if (tp != top_layers.second) {
             output = tp->second;
         }

@@ -336,7 +336,7 @@ void Net::optimize()
 }
 
 
-void Net::add_layer(shared_ptr<Layer> &layer)
+void Net::add_layer(const shared_ptr<Layer> &layer)
 {
     layers.push_back(layer);
     pair<string, Layer*> po(layer->output_name, layer.get());
@@ -446,7 +446,7 @@ void Net::copy_net_sharing_weights(Net &original)
     map<Layer*, Layer*> old_to_new;
 
     for(auto &ol : original.layers) {
-        auto nl = copy_layer(ol.get());
+        shared_ptr<Layer> nl = copy_layer(ol.get());
         old_to_new[ol.get()] = nl.get();
         layers.push_back(nl);
     }

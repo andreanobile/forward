@@ -9,7 +9,7 @@ set (nnlib_test_VERSION_MINOR 0)
 
 set ( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -mavx -mfma -std=c++11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG -mavx -mfma -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG -mavx -mfma -std=c++14")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -mavx -mfma -std=c++11")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")

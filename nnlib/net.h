@@ -67,7 +67,7 @@ public:
     void schedule();
     void optimize();
     bool bind(const std::vector<size_t> &shape);
-    void add_layer(std::shared_ptr<Layer> &layer);
+    void add_layer(const std::shared_ptr<Layer> &layer);
     Layer* add_layer(Layer::Type layer_type,
                                      const NetworkNode &params,
                                      const std::vector<std::string> &inputs,
