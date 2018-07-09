@@ -198,11 +198,12 @@ unique_ptr<Net> CaffeLoader::build_network(const CaffeNetworkDescription &desc)
 {
     unique_ptr<Net> net(new Net);
 
-    auto it = desc.root->properties.find(string("input"));
+    NetworkNode *root = desc.get_root();
+    auto it = root->properties.find(string("input"));
     vector<string> input_layers_names;
-    net->add_layer(Layer::op_input, *desc.root, input_layers_names, it->second, it->second);
+    net->add_layer(Layer::op_input, *root, input_layers_names, it->second, it->second);
 
-    for (auto l : desc.root->childs) {
+    for (auto l : root->childs) {
         if(l->node_type == layer_node) {
             add_layer(net.get(), *l);
         }

@@ -31,13 +31,18 @@ class CaffeNetworkDescription
     void init_open_of_close();
     void rewrite_network(const NetworkNode *node);
 
-public:
-
     NetworkNode *root;
+
+public:
 
     CaffeNetworkDescription();
     CaffeNetworkDescription(std::stringstream &ss);
     ~CaffeNetworkDescription();
+
+    NetworkNode *get_root() const
+    {
+        return root;
+    }
 
     void build_from_caffe_prototxt(std::stringstream &ss);
     void rewrite_network();
