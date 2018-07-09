@@ -74,15 +74,12 @@ struct NetMem
 
         size_t index = 0;
         size_t sz = 0;
-        for(MemBlk &blk : blks) {
-            if(blk.start >= index) {
-                index = blk.start;
-                sz = blk.sz;
-            }
-        }
 
         if(blks.size()) {
             auto &lstblk = blks.back();
+            index = lstblk.start;
+            sz = lstblk.sz;
+
             if(!lstblk.valid) { //if last block is not in use
                 tot_size -= lstblk.sz;
                 lstblk.sz = amount;
