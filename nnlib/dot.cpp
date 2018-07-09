@@ -19,12 +19,6 @@
 #include <immintrin.h>
 #include <stdint.h>
 
-#define v8sf __m256
-
-#define avx_addps(a, b) _mm256_add_ps((a), (b))
-#define avx_mulps(a, b) _mm256_mul_ps((a), (b))
-#define avx_madd(a, b, c) _mm256_fmadd_ps((a), (b), (c))
-
 
 float dot(const float * __restrict__ v0, const float * __restrict__ v1, size_t n)
 {
@@ -38,13 +32,13 @@ float dot(const float * __restrict__ v0, const float * __restrict__ v1, size_t n
         return tmp;
     }
 
-    v8sf vout0, vout1;
+    __m256 vout0, vout1;
     vout0 = _mm256_setzero_ps();
     vout1 = _mm256_setzero_ps();
 
     size_t n16 = n >> 4;
 
-    v8sf v0_0, v0_1, v1_0, v1_1;
+    __m256 v0_0, v0_1, v1_0, v1_1;
 
     for(i=n16;i>0;i--) {
         v0_0 = _mm256_loadu_ps(v0 + 0);
