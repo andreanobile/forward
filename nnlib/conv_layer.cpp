@@ -235,8 +235,8 @@ void ConvLayer::forward()
 
     if(kernel_size != 1 || stride_size != 1) {
 
-        //ndarray im2col_buffer({kernel_size*kernel_size*num_input_channels,
-        //                       output_shape[2]*output_shape[3]});
+        ndarray im2col_buffer({kernel_size*kernel_size*num_input_channels,
+                               output_shape[2]*output_shape[3]});
         ndarray im;
         ndarray oa;
 
