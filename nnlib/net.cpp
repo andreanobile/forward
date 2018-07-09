@@ -180,7 +180,7 @@ bool Net::bind(const vector<size_t> &shape)
                 size_t idx = conv_temp_pool.get_blk(conv->padded_input_nelem);
                 idx_padded_input[layer] = idx;
                 conv_temp_pool.release_blk(idx);
-                idx = conv_im2col_pool.get_blk(conv->)
+                //idx = conv_im2col_pool.get_blk(conv->)
             }
         }
 
