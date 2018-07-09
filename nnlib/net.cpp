@@ -81,27 +81,21 @@ struct NetMem
             }
         }
 
-
-        auto &lstblk = blks.back();
         if(blks.size()) {
+            auto &lstblk = blks.back();
             if(!lstblk.valid) { //if last block is not in use
                 tot_size -= lstblk.sz;
                 lstblk.sz = amount;
                 tot_size += amount;
                 lstblk.valid = true;
                 return lstblk.start;
-            } else {
-                MemBlk newblk(index + sz, amount);
-                blks.push_back(newblk);
-                tot_size += amount;
-                return newblk.start;
             }
-        } else {
-            MemBlk newblk(index + sz, amount);
-            blks.push_back(newblk);
-            tot_size += amount;
-            return newblk.start;
         }
+
+        MemBlk newblk(index + sz, amount);
+        blks.push_back(newblk);
+        tot_size += amount;
+        return newblk.start;
     }
 
 
