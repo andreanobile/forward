@@ -36,12 +36,12 @@ using namespace std;
 
 
 
-unique_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
+shared_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
 {
 
     if(op_type == Layer::op_convolution)
     {
-        auto conv = make_unique<ConvLayer>();
+        auto conv = make_shared<ConvLayer>();
         auto vs = params.get_prop("num_output");
         assert(vs.size() == 1);
         size_t nout = stoi(vs[0]);
@@ -67,40 +67,41 @@ unique_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
                 conv->has_bias = true;
             }
         }
-        return conv;
+
+        return static_pointer_cast<Layer>(conv);
     }
 
     else if(op_type == Layer::op_batchnorm)
     {
-        auto ptr = make_unique<BatchNormLayer>();
-        return ptr;
+        auto ptr = make_shared<BatchNormLayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_softmax)
     {
-        auto ptr = make_unique<SoftmaxLayer>();
-        return ptr;
+        auto ptr = make_shared<SoftmaxLayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_fc)
     {
-        auto fc = make_unique<FCLayer>();
+        auto fc = make_shared<FCLayer>();
         auto vs = params.get_prop("num_output");
         assert(vs.size() == 1);
         size_t nout = stoi(vs[0]);
         fc->set_num_output_channels(nout);
-        return fc;
+        return static_pointer_cast<Layer>(fc);
     }
 
     else if(op_type == Layer::op_relu)
     {
-        auto ptr = make_unique<ReLULayer>();
-        return ptr;
+        auto ptr = make_shared<ReLULayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_scale)
     {
-        auto sc = make_unique<ScaleLayer>();
+        auto sc = make_shared<ScaleLayer>();
         auto vs = params.get_prop("bias_term");
         if(vs.size()) {
             if(vs[0] == "false") {
@@ -109,12 +110,12 @@ unique_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
                 sc->has_bias = true;
             }
         }
-        return sc;
+        return static_pointer_cast<Layer>(sc);
     }
 
     else if(op_type == Layer::op_pool)
     {
-        auto pool = make_unique<PoolingLayer>();
+        auto pool = make_shared<PoolingLayer>();
         auto vs = params.get_prop("kernel_size");
         assert(vs.size() == 1);
         pool->set_kernel_size(stoi(vs[0]));
@@ -127,23 +128,24 @@ unique_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
         if(vs.size() == 1){
             pool->set_pooling_method(vs[0] == "AVE" ? pool->pool_ave : pool->pool_max);
         }
-        return pool;
+
+        return static_pointer_cast<Layer>(pool);
     }
 
     else if(op_type == Layer::op_eltwise_sum)
     {
-        auto ptr = make_unique<EltWiseLayer>();
-        return ptr;
+        auto ptr = make_shared<EltWiseLayer>();
+        return static_pointer_cast<Layer>(ptr);
     }
 
     else if(op_type == Layer::op_input)
     {
-        auto inp = make_unique<InputLayer>();
+        auto inp = make_shared<InputLayer>();
         auto p = params.get_prop("input_dim");
         for (auto &d : p) {
             inp->add_dim(stoi(d));
         }
-        return inp;
+        return static_pointer_cast<Layer>(inp);
     }
 
     else
@@ -165,16 +167,17 @@ static void copylayer(Layer *n, Layer*o)
 
 
 template<typename T>
-static unique_ptr<Layer> make_and_copy(Layer *l)
+static shared_ptr<Layer> make_and_copy(Layer *l)
 {
-    auto ptr = make_unique<T>();
+    auto ptr = make_shared<T>();
     copylayer<T>(static_cast<Layer*>(ptr.get()), l);
-    return ptr;
+    return static_pointer_cast<Layer>(ptr);
 }
 
 
-unique_ptr<Layer> copy_layer(Layer *l)
+shared_ptr<Layer> copy_layer(Layer *l)
 {
+
     Layer::Type op_type = l->op_type;
 
     if(op_type == Layer::op_convolution)
