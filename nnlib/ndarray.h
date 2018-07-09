@@ -77,8 +77,9 @@ public:
 
     void allocate(const std::vector<size_t> &s)
     {
+        if(data && own_data) free(data);
         own_data = true;
-        if(data) free(data);
+
         if(s.size() == 0) return;
         size_t sz = num_elements_from_shape(s);
 
