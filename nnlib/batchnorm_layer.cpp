@@ -109,21 +109,18 @@ void BatchNormLayer::precompute()
 }
 
 
-static inline void bn_arrays(float * __restrict__ data_in, float * __restrict__ data_out, size_t n, float nrm, float mn_nrm)
+static inline void bn_arrays(float * __restrict__ data_in, float * __restrict__ data_out, size_t n, float nrm, float mn_nrm, bool relu)
 {
-    for(size_t k=0;k<n;k++) {
-        //data_out[k] = (data_in[k] - mn)*nrm;
-        data_out[k] = data_in[k]*nrm - mn_nrm;
-    }
-}
-
-
-static inline void bn_arrays_with_relu(float * __restrict__ data_in, float * __restrict__ data_out,
-                                        size_t n, float nrm, float mn_nrm)
-{
-    for(size_t k=0;k<n;k++) {
-        //data_out[k] = (data_in[k] - mn)*nrm;
-        data_out[k] = max(data_in[k]*nrm - mn_nrm, 0.0f);
+    if(relu) {
+        for(size_t k=0;k<n;k++) {
+            //data_out[k] = (data_in[k] - mn)*nrm;
+            data_out[k] = max(data_in[k]*nrm - mn_nrm, 0.0f);
+        }
+    } else {
+        for(size_t k=0;k<n;k++) {
+            //data_out[k] = (data_in[k] - mn)*nrm;
+            data_out[k] = data_in[k]*nrm - mn_nrm;
+        }
     }
 }
 
@@ -145,42 +142,21 @@ void BatchNormLayer::forward()
     float * __restrict__ pnrm = variance->get_data();
     float * __restrict__ pmn = mean->get_data();
 
-    if(relu) {
 
-        for(size_t i=0;i<nbatch;i++) {
-            size_t boffs = i*nch*ninner;
-            for(size_t j=0;j<nch;j++) {
-                size_t offs = boffs + j*ninner;
+    for(size_t i=0;i<nbatch;i++) {
+        size_t boffs = i*nch*ninner;
+        for(size_t j=0;j<nch;j++) {
+            size_t offs = boffs + j*ninner;
 
-                float * __restrict__ data_in = din + offs;
-                float * __restrict__ data_out = dout + offs;
+            float * __restrict__ data_in = din + offs;
+            float * __restrict__ data_out = dout + offs;
 
-                float nrm = pnrm[j];
-                float mn = pmn[j];
+            float nrm = pnrm[j];
+            float mn = pmn[j];
 
-                float mn_nrm = mn*nrm;
-                bn_arrays_with_relu(data_in, data_out, ninner, nrm, mn_nrm);
-            }
+            float mn_nrm = mn*nrm;
+            bn_arrays(data_in, data_out, ninner, nrm, mn_nrm, relu);
         }
-
-    } else {
-
-        for(size_t i=0;i<nbatch;i++) {
-            size_t boffs = i*nch*ninner;
-            for(size_t j=0;j<nch;j++) {
-                size_t offs = boffs + j*ninner;
-
-                float * __restrict__ data_in = din + offs;
-                float * __restrict__ data_out = dout + offs;
-
-                float nrm = pnrm[j];
-                float mn = pmn[j];
-
-                float mn_nrm = mn*nrm;
-                bn_arrays(data_in, data_out, ninner, nrm, mn_nrm);
-            }
-        }
-
     }
 
 }
