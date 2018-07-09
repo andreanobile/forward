@@ -206,7 +206,6 @@ void ConvLayer::forward()
     if(pad_size == 0) {
         ibuf = iorig;
     } else {
-        //padded_input->allocate({padded_input_nelem});
         padded_input->zero();
         ibuf = padded_input->get_data();
         //copy input data into padded array
@@ -235,17 +234,15 @@ void ConvLayer::forward()
 
     if(kernel_size != 1 || stride_size != 1) {
 
-        ndarray im2col_buffer({kernel_size*kernel_size*num_input_channels,
-                               output_shape[2]*output_shape[3]});
         ndarray im;
         ndarray oa;
 
         for(size_t ib=0;ib<output_shape[0];ib++) {
             im.attach(ibuf+ib*nch*npw*nph, {1, nch, nph, npw});
-            im2col(&im, &im2col_buffer, kernel_size, stride_size);
+            im2col(&im, im2col_buffer.get(), kernel_size, stride_size);
             assert(m*n*output_shape[0] == output->n_elements());
             oa.attach(output->get_data()+ib*m*n, {m, n});
-            matmul(weights.get(), &im2col_buffer, &oa, m, n, k);
+            matmul(weights.get(), im2col_buffer.get(), &oa, m, n, k);
         }
 
     } else { //kernel_size==1 and stride==1

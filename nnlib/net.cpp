@@ -180,7 +180,11 @@ bool Net::bind(const vector<size_t> &shape)
                 size_t idx = conv_temp_pool.get_blk(conv->padded_input_nelem);
                 idx_padded_input[layer] = idx;
                 conv_temp_pool.release_blk(idx);
-                //idx = conv_im2col_pool.get_blk(conv->)
+            }
+            if(conv->im2col_buffer_shape.size()) {
+                size_t idx = conv_im2col_pool.get_blk(vprod(conv->im2col_buffer_shape));
+                idx_im2col[layer] = idx;
+                conv_im2col_pool.release_blk(idx);
             }
         }
 
@@ -233,6 +237,7 @@ bool Net::bind(const vector<size_t> &shape)
 
     fmap_buffer.allocate(fmap_pool.tot_size);
     conv_pad_buffer.allocate(conv_temp_pool.tot_size);
+    conv_im2col_buffer.allocate(conv_temp_pool.tot_size);
 
     for(auto layer : layers) {
         shared_ptr<ndarray> oarr(new ndarray());
@@ -251,6 +256,11 @@ bool Net::bind(const vector<size_t> &shape)
                 conv->padded_input = make_shared<ndarray>();
                 conv->padded_input->attach(&conv_pad_buffer[idx_padded_input[layer.get()]], {conv->padded_input_nelem});
             }
+            if(conv->im2col_buffer_shape.size()) {
+                conv->im2col_buffer = make_shared<ndarray>();
+                conv->im2col_buffer->attach(&conv_im2col_buffer[idx_im2col[layer.get()]], conv->im2col_buffer_shape);
+            }
+
         }
 
     }
