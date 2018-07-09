@@ -81,12 +81,20 @@ struct NetMem
             }
         }
 
-        MemBlk newblk(index + sz, amount);
 
-        blks.push_back(newblk);
-        tot_size += amount;
-
-        return newblk.start;
+        auto &lstblk = blks.back();
+        if(!lstblk.valid) { //if last block is not in use
+            tot_size -= lstblk.sz;
+            lstblk.sz = amount;
+            tot_size += amount;
+            lstblk.valid = true;
+            return lstblk.start;
+        } else {
+            MemBlk newblk(index + sz, amount);
+            blks.push_back(newblk);
+            tot_size += amount;
+            return newblk.start;
+        }
     }
 
 
@@ -150,15 +158,31 @@ bool Net::bind(const vector<size_t> &shape)
         inp->input_dims = shape;
     }
 
-    NetMem pool;
+    NetMem fmap_pool;
     map<string, size_t> outname_to_index;
     map<size_t, int> idx_refcount;
     size_t nfloats = 0;
     size_t maxmem = 0;
 
+    NetMem conv_temp_pool;
+    map<Layer*, size_t> idx_padded_input;
+
+    NetMem conv_im2col_pool;
+    map<Layer*, size_t> idx_im2col;
+
     for(Layer* layer: vsched) {
 
         layer->bind();
+
+        if(layer->op_type == Layer::op_convolution) {
+            auto conv = static_cast<ConvLayer*>(layer);
+            if(conv->padded_input_nelem) {
+                size_t idx = conv_temp_pool.get_blk(conv->padded_input_nelem);
+                idx_padded_input[layer] = idx;
+                conv_temp_pool.release_blk(idx);
+                idx = conv_im2col_pool.get_blk(conv->)
+            }
+        }
 
         bool do_inplace = layer->inplace_possible;
 
@@ -171,7 +195,7 @@ bool Net::bind(const vector<size_t> &shape)
         } else {
             size_t req = vprod(layer->output_shape);
             nfloats += req;
-            idx = pool.get_blk(req);
+            idx = fmap_pool.get_blk(req);
             outname_to_index[layer->output_name] = idx;
         }
 
@@ -190,7 +214,7 @@ bool Net::bind(const vector<size_t> &shape)
             idx_refcount[li_idx]--;
 
             if(idx_refcount[li_idx] == 0) {
-                pool.release_blk(li_idx);
+                fmap_pool.release_blk(li_idx);
                 nfloats -= vprod(li->output_shape);
                 maxmem = max(nfloats, maxmem);
             }
@@ -205,9 +229,10 @@ bool Net::bind(const vector<size_t> &shape)
     }
 
     cout << "maxmem = " << maxmem << " floats" << endl;
-    cout << "pool maxmem = " << pool.tot_size << " floats" << endl;
+    cout << "pool maxmem = " << fmap_pool.tot_size << " floats" << endl;
 
-    fmap_buffer.allocate(pool.tot_size);
+    fmap_buffer.allocate(fmap_pool.tot_size);
+    conv_pad_buffer.allocate(conv_temp_pool.tot_size);
 
     for(auto layer : layers) {
         shared_ptr<ndarray> oarr(new ndarray());
@@ -219,6 +244,15 @@ bool Net::bind(const vector<size_t> &shape)
             arr->attach(&fmap_buffer[outname_to_index[inl->output_name]], inl->output_shape);
             layer->input_arrays.push_back(arr);
         }
+
+        if(layer->op_type == Layer::op_convolution) {
+            auto conv = static_cast<ConvLayer*>(layer.get());
+            if(conv->padded_input_nelem) {
+                conv->padded_input = make_shared<ndarray>();
+                conv->padded_input->attach(&conv_pad_buffer[idx_padded_input[layer.get()]], {conv->padded_input_nelem});
+            }
+        }
+
     }
 
     return true;
@@ -344,7 +378,7 @@ void Net::add_layer(const shared_ptr<Layer> &layer)
 }
 
 
-void Net::remove_layer(shared_ptr<Layer> &layer)
+void Net::remove_layer(const shared_ptr<Layer> &layer)
 {
 
     //assign to all input layers, the current layer's output layers as output layers

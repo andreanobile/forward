@@ -44,6 +44,9 @@ ConvLayer::ConvLayer()
     kernel_size = 1;
     pad_size = 0;
     stride_size = 1;
+    padded_input_nelem = 0;
+    padded_input = nullptr;
+    im2col_buffer = nullptr;
 }
 
 
@@ -64,6 +67,20 @@ void ConvLayer::bind(const std::vector<std::vector<size_t>> &shapes)
 
     if(has_bias) {
         bias->reshape({num_output_channels});
+    }
+
+    if(pad_size) {
+        auto &inp_shape = input_shapes[0];
+        size_t nph = inp_shape[2]+2*pad_size;
+        size_t npw = inp_shape[3]+2*pad_size;
+        size_t nch = inp_shape[1];
+        size_t nbatch = inp_shape[0];
+        padded_input_nelem = nbatch*nch*nph*npw;
+    }
+
+    if(kernel_size != 1 || stride_size != 1) {
+        im2col_buffer_shape = {kernel_size*kernel_size*num_input_channels,
+                               output_shape[2]*output_shape[3]};
     }
 
     log_bind();
@@ -182,7 +199,6 @@ void ConvLayer::forward()
     size_t nh = inp_shape[2];
     size_t nw = inp_shape[3];
 
-    ndarray padded_input;
 
     float *iorig = input->get_data();
     float *ibuf;
@@ -190,9 +206,9 @@ void ConvLayer::forward()
     if(pad_size == 0) {
         ibuf = iorig;
     } else {
-        padded_input.allocate({nbatch, nch, nph, npw});
-        padded_input.zero();
-        ibuf = padded_input.get_data();
+        //padded_input->allocate({padded_input_nelem});
+        padded_input->zero();
+        ibuf = padded_input->get_data();
         //copy input data into padded array
         for(size_t ib=0;ib<nbatch;ib++) {
             size_t boffs = ib*(nch*nh*nw);
@@ -219,8 +235,8 @@ void ConvLayer::forward()
 
     if(kernel_size != 1 || stride_size != 1) {
 
-        ndarray im2col_buffer({kernel_size*kernel_size*num_input_channels,
-                               output_shape[2]*output_shape[3]});
+        //ndarray im2col_buffer({kernel_size*kernel_size*num_input_channels,
+        //                       output_shape[2]*output_shape[3]});
         ndarray im;
         ndarray oa;
 

@@ -45,6 +45,8 @@ class Net
     std::list<std::shared_ptr<Layer>> layers;
     std::vector<Layer*> vsched;
     AlignedBuffer<float, 64> fmap_buffer;
+    AlignedBuffer<float, 64> conv_pad_buffer;
+    AlignedBuffer<float, 64> conv_im2col_buffer;
 
     std::vector<Layer*> input_layers;
     std::vector<Layer*> output_layers;
@@ -54,7 +56,7 @@ class Net
         return input_layers[0]->output_array.get();
     }
 
-    void remove_layer(std::shared_ptr<Layer> &layer);
+    void remove_layer(const std::shared_ptr<Layer> &layer);
 
 public:
 

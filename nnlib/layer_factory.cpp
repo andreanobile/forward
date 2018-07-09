@@ -35,7 +35,6 @@
 using namespace std;
 
 
-
 shared_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
 {
 

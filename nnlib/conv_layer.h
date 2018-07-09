@@ -39,6 +39,10 @@ class ConvLayer : public Layer
 
 public:
     bool has_bias;
+    std::shared_ptr<ndarray> padded_input;
+    size_t padded_input_nelem;
+    std::shared_ptr<ndarray> im2col_buffer;
+    std::vector<size_t> im2col_buffer_shape;
 
     ConvLayer();
 
