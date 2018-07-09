@@ -83,12 +83,19 @@ struct NetMem
 
 
         auto &lstblk = blks.back();
-        if(!lstblk.valid) { //if last block is not in use
-            tot_size -= lstblk.sz;
-            lstblk.sz = amount;
-            tot_size += amount;
-            lstblk.valid = true;
-            return lstblk.start;
+        if(blks.size()) {
+            if(!lstblk.valid) { //if last block is not in use
+                tot_size -= lstblk.sz;
+                lstblk.sz = amount;
+                tot_size += amount;
+                lstblk.valid = true;
+                return lstblk.start;
+            } else {
+                MemBlk newblk(index + sz, amount);
+                blks.push_back(newblk);
+                tot_size += amount;
+                return newblk.start;
+            }
         } else {
             MemBlk newblk(index + sz, amount);
             blks.push_back(newblk);
@@ -237,7 +244,7 @@ bool Net::bind(const vector<size_t> &shape)
 
     fmap_buffer.allocate(fmap_pool.tot_size);
     conv_pad_buffer.allocate(conv_temp_pool.tot_size);
-    conv_im2col_buffer.allocate(conv_temp_pool.tot_size);
+    conv_im2col_buffer.allocate(conv_im2col_pool.tot_size);
 
     for(auto layer : layers) {
         shared_ptr<ndarray> oarr(new ndarray());

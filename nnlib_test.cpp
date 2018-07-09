@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
     vnet.push_back(loader.load_prototxt(net_desc_filename, net_name));
     vnet[0]->bind(image_shape);
 
-    int nthreads = 1;
+    int nthreads = 2;
     for(int ithread=1;ithread<nthreads;ithread++)
     {
         vnet.emplace_back(new Net);
