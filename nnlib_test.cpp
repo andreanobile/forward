@@ -315,8 +315,7 @@ int main(int argc, char *argv[])
     int nthreads = 2;
     for(int ithread=1;ithread<nthreads;ithread++)
     {
-        auto net = make_unique<Net>();
-        vnet.push_back(std::move(net));
+        vnet.emplace_back(new Net);
         vnet[ithread]->copy_net_sharing_weights(*vnet[0]);
         vnet[ithread]->bind(image_shape);
     }
