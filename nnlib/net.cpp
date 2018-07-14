@@ -42,12 +42,10 @@ struct NetMem
     list<MemBlk> blks;
     size_t tot_size;
 
-
     NetMem()
     {
         tot_size = 0;
     }
-
 
     size_t get_blk(size_t amount)
     {
@@ -94,7 +92,6 @@ struct NetMem
         tot_size += amount;
         return newblk.start;
     }
-
 
     void release_blk(size_t index)
     {
@@ -208,7 +205,6 @@ bool Net::bind(const vector<size_t> &shape)
                 nfloats -= vprod(li->output_shape);
                 maxmem = max(nfloats, maxmem);
             }
-
         }
 
     }
@@ -354,7 +350,6 @@ void Net::optimize()
 
     cout << "removed " << removed_relu_count << " relu layers out of " << relu_count << endl;
     cout << "removed " << removed_scale_count << " scale layers out of " << scale_count << endl;
-
 }
 
 
@@ -368,7 +363,6 @@ void Net::add_layer(const shared_ptr<Layer> &layer)
 
 void Net::remove_layer(const shared_ptr<Layer> &layer)
 {
-
     //assign to all input layers, the current layer's output layers as output layers
     for(Layer *il : layer->input_layers) {
         il->output_layers.remove(layer.get());
