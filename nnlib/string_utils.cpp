@@ -24,7 +24,7 @@
 using namespace std;
 
 
-vector<string> split_string(string str, string sep)
+vector<string> split_string(const string &str, const string &sep)
 {
     size_t start, stop;
     string piece;
@@ -47,7 +47,7 @@ vector<string> split_string(string str, string sep)
 }
 
 
-string remove_char(string &str, char ch)
+string remove_char(const string &str, char ch)
 {
     string output;
     size_t len = str.length();
@@ -62,7 +62,7 @@ string remove_char(string &str, char ch)
 }
 
 
-vector<string> tokenize(string &str)
+vector<string> tokenize(const string &str)
 {
     vector<string> tokens;
     vector<string> lines = split_string(str, "\n");

@@ -22,9 +22,9 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> split_string(std::string str, std::string sep);
-std::string remove_char(std::string &str, char ch);
-std::vector<std::string> tokenize(std::string &str);
+std::vector<std::string> split_string(const std::string &str, const std::string &sep);
+std::string remove_char(const std::string &str, char ch);
+std::vector<std::string> tokenize(const std::string &str);
 
 #endif // STRING_UTILS_H
 
