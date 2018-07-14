@@ -108,7 +108,7 @@ struct NetMem
 };
 
 
-static bool can_execute(Layer *layer, set<string> &buffer_valid)
+static bool can_execute(Layer *layer, const set<string> &buffer_valid)
 {
     for(Layer* l : layer->input_layers) {
         if( buffer_valid.find(l->output_name) == buffer_valid.end() ) {

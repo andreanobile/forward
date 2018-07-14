@@ -34,7 +34,7 @@ struct AlignedBuffer
     }
 
 
-    AlignedBuffer(size_t nelem)
+    explicit AlignedBuffer(size_t nelem)
     {
         allocate(nelem);
     }

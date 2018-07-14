@@ -41,7 +41,7 @@ public:
         init();
     }
 
-    FCLayer(size_t nout_channels)
+    explicit FCLayer(size_t nout_channels)
     {
         init();
         set_num_output_channels(nout_channels);

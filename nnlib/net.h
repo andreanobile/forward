@@ -93,7 +93,7 @@ public:
         }
     }
 
-    void copy_to_input(ndarray &inp)
+    void copy_to_input(const ndarray &inp)
     {
         get_input_array()->copy_from(inp);
     }

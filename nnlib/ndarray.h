@@ -54,7 +54,7 @@ public:
         own_data = true;
     }
 
-    ndarray(const std::vector<size_t> &s)
+    explicit ndarray(const std::vector<size_t> &s)
     {
         data = nullptr;
         lock = 0;
@@ -66,11 +66,17 @@ public:
         clear();
     }
 
-    float *get_data(){
+    float *get_data()
+    {
         return data;
     }
 
-    size_t n_elements()
+    float *get_data() const
+    {
+        return data;
+    }
+
+    size_t n_elements() const
     {
         return num_elements;
     }
@@ -154,7 +160,7 @@ public:
 
     void dump(const std::string &fname);
 
-    void copy_from(ndarray &arr) {
+    void copy_from(const ndarray &arr) {
         assert(num_elements == arr.n_elements());
         memcpy(data, arr.get_data(), num_elements*sizeof(float));
         reshape(arr.shape);
