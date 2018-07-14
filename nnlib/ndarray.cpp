@@ -38,7 +38,7 @@ unique_ptr<ndarray> ndarray_from_file(const string &fname)
     if(file_exists(fname)) {
 
         size_t sz = file_size(fname);
-        unique_ptr<ndarray> data(new ndarray());
+        auto data = make_unique<ndarray>();
         vector<size_t> vsize;
         vsize.push_back(sz/sizeof(float));
         data->allocate(vsize);
