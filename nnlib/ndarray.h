@@ -77,7 +77,7 @@ public:
 
     void allocate(const std::vector<size_t> &s)
     {
-        if(data && own_data) free(data);
+        clear();
         own_data = true;
 
         if(s.size() == 0) return;
@@ -123,6 +123,7 @@ public:
         num_elements = 0;
         if(data && own_data) {
             free(data);
+            data = nullptr;
         }
     }
 
