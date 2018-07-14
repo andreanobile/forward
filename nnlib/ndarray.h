@@ -90,7 +90,7 @@ public:
         size_t sz = num_elements_from_shape(s);
 
         int ret = posix_memalign((void**)&data, 64, sizeof(float)*sz);
-        if(ret) {
+        if(ret != 0) {
             std::cout << "failed to allocate ndarray" << std::endl;
             abort();
         }
@@ -109,7 +109,7 @@ public:
 
     size_t num_elements_from_shape(const std::vector<size_t> &s) const
     {
-        if(s.size() == 0) return 0;
+        if(s.empty()) {return 0;}
 
         size_t sz = 1;
         for(size_t i : s) {

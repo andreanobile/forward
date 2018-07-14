@@ -452,7 +452,7 @@ void Net::forward()
 }
 
 
-void Net::copy_net_sharing_weights(Net &original)
+void Net::copy_net_sharing_weights(const Net &original)
 {
     //need to create layers in this net, copying the layers of the original network
     map<Layer*, Layer*> old_to_new;

@@ -55,9 +55,9 @@ struct NetworkNode
     bool get_bool_inner_prop(const std::string &prop) const
     {
         std::string str = get_inner_prop(prop);
-        if(str.length() == 0) return false;
-        if(str.compare("false") == 0) return false;
-        else return true;
+        if(str.length() == 0) {return false;}
+        if(str.compare("false") == 0) {return false;}
+        else {return true;}
     }
 
     std::vector<std::string> get_prop(const std::string &prop) const

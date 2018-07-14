@@ -103,7 +103,7 @@ public:
         return output_layers[0]->output_array.get();;
     }
 
-    void copy_net_sharing_weights(Net &original);
+    void copy_net_sharing_weights(const Net &original);
 
 };
 
