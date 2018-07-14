@@ -129,8 +129,8 @@ public:
         num_elements = 0;
         if(data && own_data) {
             free(data);
-            data = nullptr;
         }
+        data = nullptr;
     }
 
     void reshape(const std::vector<size_t> &newshape)

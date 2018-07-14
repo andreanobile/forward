@@ -64,7 +64,7 @@ CaffeNetworkDescription::~CaffeNetworkDescription()
             }
         }
 
-        if(node->childs.size() == 0 || can_delete) {
+        if(node->childs.empty() || can_delete) {
             deleted.insert(node);
             delete node;
             node_stack.pop();
