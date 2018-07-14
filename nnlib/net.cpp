@@ -50,8 +50,7 @@ struct NetMem
     size_t get_blk(size_t amount)
     {
         auto bestblk = blks.end();
-        size_t minsize;
-        if(blks.size()) minsize = numeric_limits<size_t>::max();
+        size_t minsize = numeric_limits<size_t>::max();
 
         for (auto it = blks.begin(); it != blks.end(); it++) {
             if(!it->valid && it->sz >= amount) {
