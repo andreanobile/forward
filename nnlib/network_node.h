@@ -93,7 +93,4 @@ struct NetworkNode
 
 };
 
-
-
 #endif // NETWORK_NODE_H
-

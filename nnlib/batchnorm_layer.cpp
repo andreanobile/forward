@@ -157,5 +157,4 @@ void BatchNormLayer::forward()
             bn_arrays(data_in, data_out, ninner, nrm, mn_nrm, relu);
         }
     }
-
 }

@@ -23,4 +23,3 @@ InputLayer::InputLayer()
     op_type = op_input;
     input_dims.reserve(4);
 }
-

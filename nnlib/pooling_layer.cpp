@@ -61,7 +61,6 @@ void PoolingLayer::bind(const vector<vector<size_t>> &shapes)
         ceiled_w = 1;
         cout << "warning " << name << " shape w has been padded" << endl;
     }
-
 }
 
 
@@ -129,7 +128,6 @@ void PoolingLayer::forward()
                         obuf[k]=mx/pool_size;
                         k++;
                     }
-
 
                 }
             }

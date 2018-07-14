@@ -57,6 +57,7 @@ string remove_char(string &str, char ch)
         if(str[i] != ch)
         output += str[i];
     }
+
     return output;
 }
 

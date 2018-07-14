@@ -45,7 +45,7 @@ ConvLayer::ConvLayer()
     pad_size = 0;
     stride_size = 1;
     padded_input_nelem = 0;
-    padded_input = nullptr;
+    //padded_input = nullptr;
     im2col_buffer = nullptr;
 }
 
@@ -297,6 +297,7 @@ void ConvLayer::forward()
             if(has_bias) {
                 bias_w = bias->get_data()[ioch];
             }
+
             size_t ppp=0;
             for(size_t ih=0;ih<=max_starty;ih+=stride_size) {
                 size_t hoffs = ih*npw;
@@ -307,7 +308,6 @@ void ConvLayer::forward()
 
                     for(size_t ich=0;ich<nch;ich++) {
                         size_t choffs = ich*(nph*npw);
-
 
                         float *patch = &ibuf[boffs+choffs+hoffs+iw];
                         size_t is=0;
@@ -322,18 +322,14 @@ void ConvLayer::forward()
                                 is++;
                             }
                         }
-
                     }
 
                     res += bias_w;
                     obuf[k]=res;
                     k++;
                     ppp++;
-
                 }
             }
-
-
         }
     }
 

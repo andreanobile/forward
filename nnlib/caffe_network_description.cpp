@@ -135,11 +135,8 @@ void CaffeNetworkDescription::build_from_caffe_prototxt(stringstream &ss)
             }
 
             prevtok = tok;
-
         }
-
     }
-
 }
 
 

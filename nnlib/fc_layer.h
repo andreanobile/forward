@@ -67,12 +67,10 @@ public:
         num_output_channels = nc;
     }
 
-
     void setnum_input_channels(size_t nc)
     {
         num_input_channels = nc;
     }
-
 
 };
 

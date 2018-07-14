@@ -22,11 +22,10 @@
 #include "layer.h"
 #include <vector>
 
-//using namespace std;
-
 class InputLayer : public Layer
 {
 public:
+
     InputLayer();
     std::vector<size_t> input_dims;
 

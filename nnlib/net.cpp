@@ -135,18 +135,6 @@ static size_t vprod(const vector<size_t> &v) {
 }
 
 
-Net::Net()
-{   
-
-}
-
-
-Net::~Net()
-{
-
-}
-
-
 bool Net::bind(const vector<size_t> &shape)
 {
     InputLayer *inp;
@@ -258,9 +246,7 @@ bool Net::bind(const vector<size_t> &shape)
                 conv->im2col_buffer = make_shared<ndarray>();
                 conv->im2col_buffer->attach(&conv_im2col_buffer[idx_im2col[layer.get()]], conv->im2col_buffer_shape);
             }
-
         }
-
     }
 
     return true;
@@ -285,7 +271,6 @@ void Net::schedule()
         lay = *it;
 
         if(can_execute(lay, buffer_valid)) {
-
             buffer_valid.insert(lay->output_name);
             vsched.push_back(lay);
             cout << "pushed layer " << lay->name << " to execution" << endl;
@@ -298,9 +283,7 @@ void Net::schedule()
             }
             it = pqueue.begin();
             no_exec = false;
-
         } else {
-
             it++;
             if(it == pqueue.end()) {
                 it = pqueue.begin();
@@ -314,7 +297,6 @@ void Net::schedule()
                 rstart = true;
                 no_exec = true;
             }
-
         }
     }
 
@@ -367,9 +349,7 @@ void Net::optimize()
                     }
                 }
             }
-
         }
-
     }
 
     cout << "removed " << removed_relu_count << " relu layers out of " << relu_count << endl;
@@ -438,7 +418,6 @@ Layer* Net::add_layer(Layer::Type layer_type, const NetworkNode &params,
     add_layer(layer);
 
     return layer.get();
-
 }
 
 
@@ -465,7 +444,6 @@ void Net::complete_construction()
 
     optimize();
     schedule();
-
 }
 
 
@@ -478,7 +456,6 @@ void Net::forward()
         layer->forward();
     }
     cout << "forward time = " << time.stop() << " s" << endl;
-
 }
 
 
@@ -526,6 +503,4 @@ void Net::copy_net_sharing_weights(Net &original)
     for(auto &l: original.vsched) {
         vsched.push_back(old_to_new[l]);
     }
-
 }
-

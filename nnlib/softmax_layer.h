@@ -24,7 +24,9 @@
 class SoftmaxLayer : public Layer
 {
     size_t ninner;
+
 public:
+
     SoftmaxLayer();
 
     virtual void forward();

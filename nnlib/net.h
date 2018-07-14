@@ -61,8 +61,13 @@ class Net
 public:
 
 
-    Net();
-    ~Net();
+    Net()
+    {
+    }
+
+    ~Net()
+    {
+    }
 
     void forward();
     void complete_construction();

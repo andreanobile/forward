@@ -27,4 +27,3 @@ size_t file_size(const std::string &fname);
 std::string path_join(const std::string &first, const std::string &second);
 
 #endif // FILE_UTILS_H
-

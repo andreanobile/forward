@@ -87,5 +87,4 @@ void FCLayer::forward()
             d[i] = d[i] + bdata[i];
         }
     }
-
 }
