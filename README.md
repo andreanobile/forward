@@ -16,7 +16,7 @@ To run the program a HASWELL (supporting AVX, fma) or newer cpu is needed. A Lin
 BUILD:
 in the source directory use cmake.
 
-$ cmake .
+$ cmake -DCMAKE_BUILD_TYPE=Release .
 
 $ make
 
