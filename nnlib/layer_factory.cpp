@@ -102,7 +102,7 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
     {
         auto sc = make_shared<ScaleLayer>();
         auto vs = params.get_prop("bias_term");
-        if(vs.size()) {
+        if(!vs.empty()) {
             if(vs[0] == "false") {
                 sc->has_bias = false;
             } else {

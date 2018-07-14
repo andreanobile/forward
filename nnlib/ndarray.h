@@ -86,7 +86,7 @@ public:
         clear();
         own_data = true;
 
-        if(s.size() == 0) return;
+        if(s.empty()) {return;}
         size_t sz = num_elements_from_shape(s);
 
         int ret = posix_memalign((void**)&data, 64, sizeof(float)*sz);
