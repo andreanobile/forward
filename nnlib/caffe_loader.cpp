@@ -196,8 +196,7 @@ void CaffeLoader::add_layer(Net *net, const NetworkNode &caffe_layer)
 
 unique_ptr<Net> CaffeLoader::build_network(const CaffeNetworkDescription &desc)
 {
-    unique_ptr<Net> net(new Net);
-
+    auto net = make_unique<Net>();
     NetworkNode *root = desc.get_root();
     auto it = root->properties.find(string("input"));
     vector<string> input_layers_names;
