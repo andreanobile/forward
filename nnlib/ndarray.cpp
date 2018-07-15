@@ -21,7 +21,6 @@
 #include <string>
 #include <memory>
 #include <fstream>
-//#include "file_utils.h"
 
 using namespace std;
 
@@ -36,9 +35,9 @@ void ndarray::dump(const std::string &fname)
 
 unique_ptr<ndarray> ndarray_from_file(const string &fname)
 {
-
     streampos size;
     ifstream file ("example.bin", ios::in|ios::binary|ios::ate);
+
     if (file.is_open()) {
         size = file.tellg();
         auto data = make_unique<ndarray>();
@@ -55,27 +54,4 @@ unique_ptr<ndarray> ndarray_from_file(const string &fname)
         abort();
         return nullptr;
     }
-    /*
-    if(file_exists(fname)) {
-
-        size_t sz = file_size(fname);
-        auto data = make_unique<ndarray>();
-        vector<size_t> vsize;
-        vsize.push_back(sz/sizeof(float));
-        data->allocate(vsize);
-        FILE *f = fopen(fname.c_str(), "r");
-        size_t read_sz = fread(data->get_data(), sizeof(float), vsize[0], f);
-        if(read_sz != sz/sizeof(float)) {
-            cout << "error loading file " << fname << endl;
-            abort();
-        }
-        fclose(f);
-        return data;
-
-    } else {
-        cout << "error opening file " << fname << endl;
-        abort();
-        return nullptr;
-    }
-    */
 }
