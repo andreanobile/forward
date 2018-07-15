@@ -20,6 +20,7 @@
 #define CAFFENETWORKDESCRIPTION_H
 
 #include <sstream>
+#include <stack>
 #include "network_node.h"
 
 class CaffeNetworkDescription
