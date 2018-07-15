@@ -36,10 +36,11 @@ void ndarray::dump(const std::string &fname)
 unique_ptr<ndarray> ndarray_from_file(const string &fname)
 {
     streampos size;
-    ifstream file ("example.bin", ios::in|ios::binary|ios::ate);
+    ifstream file (fname.c_str(), ios::in|ios::binary|ios::ate);
 
     if (file.is_open()) {
         size = file.tellg();
+        file.seekg(0, ios::beg);
         auto data = make_unique<ndarray>();
         data->allocate({size/sizeof(float)});
         file.read(reinterpret_cast<char*>(data->get_data()), size);
