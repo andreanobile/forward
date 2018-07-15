@@ -26,10 +26,15 @@ using namespace std;
 
 void ndarray::dump(const std::string &fname)
 {
-    FILE *f;
-    f = fopen(fname.c_str(), "w");
-    fwrite(data, sizeof(float), num_elements, f);
-    fclose(f);
+    ofstream file(fname.c_str(), ios::out | ios::binary | ios::trunc);
+
+    if(file.is_open()) {
+        file.write(reinterpret_cast<char*>(data), sizeof(float)*num_elements);
+        file.close();
+    } else {
+        cout << "error opening dump file " << fname << '\n';
+        abort();
+    }
 }
 
 
