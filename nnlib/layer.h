@@ -84,7 +84,6 @@ public:
 
     virtual void forward()
     {
-
     }
 
     virtual void bind(const std::vector<std::vector<size_t>> &shapes)
@@ -94,7 +93,7 @@ public:
         log_bind();
     }
 
-    virtual void bind() //inpulayer has a different bind
+    virtual void bind() //inputlayer has a different bind
     {
         std::vector<std::vector<size_t>> shapes;
         for(Layer *l : input_layers) {

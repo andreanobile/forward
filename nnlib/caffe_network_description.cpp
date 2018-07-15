@@ -45,7 +45,9 @@ CaffeNetworkDescription::CaffeNetworkDescription(stringstream &ss)
 
 CaffeNetworkDescription::~CaffeNetworkDescription()
 {
-    if(root == nullptr) return;
+    if(root == nullptr) {
+        return;
+    }
 
     NetworkNode *node = root;
     stack<NetworkNode*> node_stack;

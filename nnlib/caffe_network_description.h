@@ -40,6 +40,11 @@ public:
     explicit CaffeNetworkDescription(std::stringstream &ss);
     ~CaffeNetworkDescription();
 
+    CaffeNetworkDescription(CaffeNetworkDescription &c) = delete;
+    CaffeNetworkDescription(CaffeNetworkDescription &&c) = delete;
+    CaffeNetworkDescription & operator=(CaffeNetworkDescription &c) = delete;
+    CaffeNetworkDescription & operator=(CaffeNetworkDescription &&c) = delete;
+
     NetworkNode *get_root() const
     {
         return root;
