@@ -33,9 +33,9 @@ struct NetMem
     {
         size_t start;
         size_t sz;
-        bool valid;
+        bool in_use;
 
-        MemBlk(size_t start, size_t sz) : start(start), sz(sz), valid(true)
+        MemBlk(size_t start, size_t sz) : start(start), sz(sz), in_use(true)
         { }
     };
 
@@ -47,13 +47,19 @@ struct NetMem
         tot_size = 0;
     }
 
-    size_t get_blk(size_t amount)
+    size_t get_blk(size_t req_amount)
     {
+        //align to 64bytes
+        size_t amount = req_amount;
+        if(req_amount%16 != 0) {
+            amount = ((req_amount/16)+1)*16;
+        }
+
         auto bestblk = blks.end();
         size_t minsize = numeric_limits<size_t>::max();
 
         for (auto it = blks.begin(); it != blks.end(); it++) {
-            if(!it->valid && it->sz >= amount) {
+            if(!it->in_use && it->sz >= amount) {
                 if(it->sz <= minsize) {
                     minsize = min(it->sz, minsize);
                     bestblk = it;
@@ -63,7 +69,7 @@ struct NetMem
 
         if(bestblk != blks.end()) {
             if(bestblk->sz >= amount) {
-                bestblk->valid = true;
+                bestblk->in_use = true;
 
                 return bestblk->start;
             }
@@ -77,11 +83,11 @@ struct NetMem
             index = lstblk.start;
             sz = lstblk.sz;
 
-            if(!lstblk.valid) { //if last block is not in use
+            if(!lstblk.in_use) {
                 tot_size -= lstblk.sz;
                 lstblk.sz = amount;
                 tot_size += amount;
-                lstblk.valid = true;
+                lstblk.in_use = true;
                 return lstblk.start;
             }
         }
@@ -96,8 +102,7 @@ struct NetMem
     {
         for(auto &blk : blks) {
             if(index == blk.start) {
-                blk.valid = false;
-
+                blk.in_use = false;
                 return;
             }
         }

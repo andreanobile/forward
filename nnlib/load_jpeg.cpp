@@ -44,6 +44,7 @@ void JpegLoader::load_and_decode_jpeg(const string &fname, RGBImage &ret)
         size_t read_sz = fread(buf, 1, sz, f);
         if(sz!=read_sz){
             cout << "error reading " << fname << endl;
+            fclose(f);
             abort();
         }
         fclose(f);

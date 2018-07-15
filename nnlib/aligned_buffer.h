@@ -29,7 +29,7 @@ struct AlignedBuffer
     {
         clear();
 
-        int ret = posix_memalign((void**)&data, ALIGN, sizeof(T)*nelem);
+        int ret = posix_memalign(reinterpret_cast<void**>(&data), ALIGN, sizeof(T)*nelem);
         if(ret != 0) {
             std::cout << "failed to allocate aligned buffer ! \n";
             abort();
@@ -52,6 +52,11 @@ struct AlignedBuffer
     }
 
     float & operator[](size_t idx)
+    {
+        return data[idx];
+    }
+
+    float & operator[](size_t idx) const
     {
         return data[idx];
     }
