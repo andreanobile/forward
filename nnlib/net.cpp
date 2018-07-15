@@ -22,7 +22,7 @@
 #include <assert.h>
 #include "net.h"
 #include "layer_factory.h"
-#include "chrono.h"
+#include "chronometer.h"
 
 using namespace std;
 

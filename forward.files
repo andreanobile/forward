@@ -9,6 +9,8 @@ nnlib/caffe_loader.cpp
 nnlib/caffe_loader.h
 nnlib/chrono.cpp
 nnlib/chrono.h
+nnlib/chronometer.cpp
+nnlib/chronometer.h
 nnlib/conv_layer.cpp
 nnlib/conv_layer.h
 nnlib/dot.cpp

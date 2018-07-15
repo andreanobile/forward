@@ -36,7 +36,7 @@
 #include "layer_factory.h"
 #include "load_jpeg.h"
 #include "rescale_image.h"
-#include "chrono.h"
+#include "chronometer.h"
 #include "string_utils.h"
 
 
