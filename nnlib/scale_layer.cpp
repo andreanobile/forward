@@ -49,10 +49,10 @@ void ScaleLayer::bind(const vector<vector<size_t>> &shapes)
 }
 
 
-static inline void scale_with_bias(float * __restrict__ data_in, float * __restrict__ data_out,
-                                   size_t n, float scale, float bias, bool do_relu)
+static inline void scale_with_bias(const float * __restrict__ data_in, float * __restrict__ data_out,
+                                   size_t n, float scale, float bias, bool relu)
 {
-    if(do_relu) {
+    if(relu) {
         for(size_t k=0;k<n;k++) {
             data_out[k] = max(scale*data_in[k] + bias, 0.0f);
         }
@@ -64,10 +64,10 @@ static inline void scale_with_bias(float * __restrict__ data_in, float * __restr
 }
 
 
-static inline void scale(float * __restrict__ data_in, float * __restrict__ data_out,
-                         size_t n, float scale, bool do_relu)
+static inline void scale(const float * __restrict__ data_in, float * __restrict__ data_out,
+                         size_t n, float scale, bool relu)
 {
-    if(do_relu) {
+    if(relu) {
         for(size_t k=0;k<n;k++) {
             data_out[k] = max(scale*data_in[k], 0.0f);
         }

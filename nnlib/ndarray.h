@@ -26,6 +26,7 @@
 #include <cstring>
 #include <memory>
 #include <immintrin.h>
+#include <assert.h>
 
 class ndarray
 {
@@ -176,5 +177,6 @@ public:
 
 
 std::unique_ptr<ndarray> ndarray_from_file(const std::string &fname);
+
 
 #endif // NDARRAY_H

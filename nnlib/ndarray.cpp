@@ -26,7 +26,7 @@ using namespace std;
 
 void ndarray::dump(const std::string &fname)
 {
-    ofstream file(fname.c_str(), ios::out | ios::binary | ios::trunc);
+    ofstream file(fname.c_str(), ios::out|ios::binary|ios::trunc);
 
     if(file.is_open()) {
         file.write(reinterpret_cast<char*>(data), sizeof(float)*num_elements);

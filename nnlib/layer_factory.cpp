@@ -59,7 +59,7 @@ shared_ptr<Layer> create_layer(Layer::Type op_type, const NetworkNode &params)
         conv->set_stride_size(stoi(vs[0]));
 
         vs = params.get_prop("bias_term");
-        if(vs.size() != 0) {
+        if(!vs.empty()) {
             if(vs[0] == "false") {
                 conv->has_bias = false;
             } else {

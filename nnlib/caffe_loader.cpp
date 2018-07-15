@@ -28,7 +28,6 @@
 #include "caffe_loader.h"
 #include "net.h"
 #include "string_utils.h"
-#include "file_utils.h"
 #include "ndarray.h"
 #include "caffe_network_description.h"
 
