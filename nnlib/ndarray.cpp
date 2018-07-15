@@ -50,13 +50,13 @@ unique_ptr<ndarray> ndarray_from_file(const string &fname)
         data->allocate({size/sizeof(float)});
         file.read(reinterpret_cast<char*>(data->get_data()), size);
         if(!file) {
-            cout << "error loading file " << fname << endl;
+            cout << "error loading file " << fname << '\n';
             abort();
         }
         file.close();
         return data;
     } else {
-        cout << "error opening file " << fname << endl;
+        cout << "error opening file " << fname << '\n';
         abort();
         return nullptr;
     }
