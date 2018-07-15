@@ -45,7 +45,7 @@ CaffeNetworkDescription::CaffeNetworkDescription(stringstream &ss)
 
 CaffeNetworkDescription::~CaffeNetworkDescription()
 {
-    if(!root) return;
+    if(root == nullptr) return;
 
     NetworkNode *node = root;
     stack<NetworkNode*> node_stack;
@@ -96,7 +96,7 @@ void CaffeNetworkDescription::build_from_caffe_prototxt(stringstream &ss)
     stack<NetworkNode*> node_stack;
 
     NetworkNode *node = root;
-    node->node_type = root_node;
+    node->node_type = NetworkNode::root_node;
     node_stack.push(node);
 
     string prevtok;
@@ -117,9 +117,9 @@ void CaffeNetworkDescription::build_from_caffe_prototxt(stringstream &ss)
                 node = new NetworkNode;
 
                 if(prevtok.find("layer") != string::npos) {
-                    node->node_type = layer_node;
+                    node->node_type = NetworkNode::layer_node;
                 } else if(prevtok.find("param") != string::npos) {
-                    node->node_type = layer_properties_node;
+                    node->node_type = NetworkNode::layer_properties_node;
                 }
 
                 node_stack.top()->childs.push_back(node);
@@ -147,9 +147,9 @@ void CaffeNetworkDescription::rewrite_network(const NetworkNode *node)
     }
 
     for(auto pc : node->childs) {
-        if(pc->node_type == layer_node) {
+        if(pc->node_type == NetworkNode::layer_node) {
             cout << "layer " << endl;
-        } else if (pc->node_type == layer_properties_node) {
+        } else if (pc->node_type == NetworkNode::layer_properties_node) {
             cout << "properties " << endl;
         }
         cout << "{" << endl;

@@ -25,14 +25,21 @@
 #include <memory>
 #include <utility>
 
-enum NodeType {root_node, layer_node, layer_properties_node};
+
 
 
 struct NetworkNode
 {
+    enum NodeType {root_node, layer_node, layer_properties_node};
+
     NodeType node_type;
     std::multimap<std::string, std::string> properties;
     std::vector<NetworkNode*> childs;
+
+    NetworkNode()
+    {
+        node_type = root_node;
+    }
 
     std::string get_inner_prop(const std::string &prop) const
     {

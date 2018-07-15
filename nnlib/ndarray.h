@@ -62,6 +62,8 @@ public:
     {
         data = nullptr;
         lock = 0;
+        num_elements = 0;
+        own_data = true;
         allocate(s);
     }
 

@@ -312,7 +312,7 @@ void Net::optimize()
 
     vector<shared_ptr<Layer>> vl;
 
-    for(auto layer : layers) {
+    for(auto &layer : layers) {
         vl.push_back(layer);
     }
 

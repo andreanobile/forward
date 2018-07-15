@@ -36,7 +36,7 @@ class CaffeNetworkDescription
 public:
 
     CaffeNetworkDescription();
-    CaffeNetworkDescription(std::stringstream &ss);
+    explicit CaffeNetworkDescription(std::stringstream &ss);
     ~CaffeNetworkDescription();
 
     NetworkNode *get_root() const

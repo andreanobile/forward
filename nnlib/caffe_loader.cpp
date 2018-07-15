@@ -204,7 +204,7 @@ unique_ptr<Net> CaffeLoader::build_network(const CaffeNetworkDescription &desc)
     net->add_layer(Layer::op_input, *root, input_layers_names, it->second, it->second);
 
     for (auto l : root->childs) {
-        if(l->node_type == layer_node) {
+        if(l->node_type == NetworkNode::layer_node) {
             add_layer(net.get(), *l);
         }
     }
