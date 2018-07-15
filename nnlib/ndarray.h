@@ -40,6 +40,10 @@ public:
 
     ndarray &operator=(ndarray &a) = delete;
     ndarray &operator=(const ndarray &a) = delete;
+    ndarray(ndarray &a) = delete;
+    ndarray(const ndarray &a) = delete;
+    ndarray &operator=(ndarray &&b) = delete;
+    ndarray(ndarray &&b) = delete;
 
     volatile unsigned long *get_lock_address()
     {

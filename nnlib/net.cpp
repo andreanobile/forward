@@ -72,7 +72,7 @@ struct NetMem
         size_t index = 0;
         size_t sz = 0;
 
-        if(blks.size()) {
+        if(!blks.empty()) {
             auto &lstblk = blks.back();
             index = lstblk.start;
             sz = lstblk.sz;
@@ -121,7 +121,10 @@ static bool can_execute(Layer *layer, const set<string> &buffer_valid)
 
 static size_t vprod(const vector<size_t> &v) {
 
-    if(v.size() == 0) return 0;
+    if(v.empty()) {
+        return 0;
+    }
+
     size_t sz = 1;
 
     for(auto i: v) {
@@ -134,9 +137,9 @@ static size_t vprod(const vector<size_t> &v) {
 bool Net::bind(const vector<size_t> &shape)
 {
     InputLayer *inp;
-    inp = static_cast<InputLayer*>(*input_layers.begin());
+    inp = dynamic_cast<InputLayer*>(*input_layers.begin());
 
-    if(shape.size()) {
+    if(!shape.empty()) {
         inp->input_dims = shape;
     }
 
@@ -157,13 +160,13 @@ bool Net::bind(const vector<size_t> &shape)
         layer->bind();
 
         if(layer->op_type == Layer::op_convolution) {
-            auto conv = static_cast<ConvLayer*>(layer);
-            if(conv->padded_input_nelem) {
+            auto conv = dynamic_cast<ConvLayer*>(layer);
+            if(conv->padded_input_nelem != 0u) {
                 size_t idx = conv_temp_pool.get_blk(conv->padded_input_nelem);
                 idx_padded_input[layer] = idx;
                 conv_temp_pool.release_blk(idx);
             }
-            if(conv->im2col_buffer_shape.size()) {
+            if(!conv->im2col_buffer_shape.empty()) {
                 size_t idx = conv_im2col_pool.get_blk(vprod(conv->im2col_buffer_shape));
                 idx_im2col[layer] = idx;
                 conv_im2col_pool.release_blk(idx);
@@ -186,7 +189,7 @@ bool Net::bind(const vector<size_t> &shape)
         }
 
         //acquire
-        if(!layer->output_layers.size()) {
+        if(layer->output_layers.empty()) {
             idx_refcount[idx]++;
         }
         idx_refcount[idx]+=layer->output_layers.size();
@@ -232,12 +235,12 @@ bool Net::bind(const vector<size_t> &shape)
         }
 
         if(layer->op_type == Layer::op_convolution) {
-            auto conv = static_cast<ConvLayer*>(layer.get());
-            if(conv->padded_input_nelem) {
+            auto conv = dynamic_cast<ConvLayer*>(layer.get());
+            if(conv->padded_input_nelem != 0u) {
                 conv->padded_input = make_shared<ndarray>();
                 conv->padded_input->attach(&conv_pad_buffer[idx_padded_input[layer.get()]], {conv->padded_input_nelem});
             }
-            if(conv->im2col_buffer_shape.size()) {
+            if(!conv->im2col_buffer_shape.empty()) {
                 conv->im2col_buffer = make_shared<ndarray>();
                 conv->im2col_buffer->attach(&conv_im2col_buffer[idx_im2col[layer.get()]], conv->im2col_buffer_shape);
             }
@@ -332,11 +335,10 @@ void Net::optimize()
             else if(layer->op_type == Layer::op_scale) {
                 scale_count++;
                 if(inp_layer->op_type == Layer::op_batchnorm) {
-
                     //merge batchnorm with scale (if bn has not been merged with relu)
-                    auto bn = static_cast<BatchNormLayer*>(inp_layer);
+                    auto bn = dynamic_cast<BatchNormLayer*>(inp_layer);
                     if(!bn->relu) {
-                        if(layer->relu) bn->relu = true;
+                        bn->relu = layer->relu;
                         bn->set_scale_layer(static_pointer_cast<ScaleLayer>(layer));
 
                         remove_layer(layer);
@@ -421,12 +423,12 @@ void Net::complete_construction()
 
     for (auto &layer : layers) {
 
-        if(layer->output_layers.size() == 0) {
+        if(layer->output_layers.empty()) {
             output_layers.push_back(layer.get());
             cout << "output layer: " << layer->name << " output name: " << layer->output_name << endl;
         }
 
-        if(layer->input_layers.size() == 0) {
+        if(layer->input_layers.empty()) {
             input_layers.push_back(layer.get());
             cout << "input layer: " << layer->name << " output name: " << layer->output_name << endl;
         }
@@ -442,7 +444,7 @@ void Net::complete_construction()
 
 void Net::forward()
 {
-    Chrono time;
+    Chronometer time;
 
     time.start();
     for(Layer* layer : vsched) {

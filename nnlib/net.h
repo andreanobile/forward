@@ -60,6 +60,13 @@ class Net
 
 public:
 
+    Net(Net &b) = delete;
+    Net(const Net &b) = delete;
+    Net &operator=(Net &b) = delete;
+    Net &operator=(const Net &b) = delete;
+    Net &operator=(Net &&b) = delete;
+    Net(Net &&b) = delete;
+
 
     Net()
     {
@@ -83,14 +90,16 @@ public:
 
     Layer* output_name_to_layer(const std::string &str)
     {
+        Layer *ret = nullptr;
         auto it = out_name_to_layer.find(str);
         if (it != out_name_to_layer.end()) {
-            return it->second;
+            ret = it->second;
         }
         else {
             std::cout << "item " << str << "not found in output names" << std::endl;
             std::abort();
         }
+        return ret;
     }
 
     void copy_to_input(const ndarray &inp)

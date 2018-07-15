@@ -68,6 +68,10 @@ public:
         relu = false;
     }
 
+    virtual ~Layer()
+    {
+    }
+
     void add_input(Layer *layer)
     {
         input_layers.push_back(layer);
