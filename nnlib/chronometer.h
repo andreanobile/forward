@@ -16,32 +16,34 @@
  *                                                                              *
  *******************************************************************************/
 
-#ifndef CHRONO_H
-#define CHRONO_H
+#ifndef CHRONOMETER_H
+#define CHRONOMETER_H
 
-#include <sys/time.h>
-class Chrono
+#include <ctime>
+#include <ratio>
+#include <chrono>
+
+class Chronometer
 {
-    struct timeval tv;
+    std::chrono::steady_clock::time_point t1;
 public:
-    Chrono() {
-        //gettimeofday(&tv, nullptr);
+    Chronometer()
+    {
     }
 
     void start()
     {
-        gettimeofday(&tv, nullptr);
+        using namespace std::chrono;
+        t1 = steady_clock::now();
     }
 
     double stop()
     {
-        double time_us, nowtime_us;
-        struct timeval nowtv;
-        gettimeofday(&nowtv, nullptr);
-        time_us = ((double)tv.tv_sec) * 1000000.0 + ((double)tv.tv_usec);
-        nowtime_us = ((double)nowtv.tv_sec) * 1000000.0 + ((double)nowtv.tv_usec);
-        return (nowtime_us-time_us)/1000000.0;
+        using namespace std::chrono;
+        steady_clock::time_point t2 = steady_clock::now();
+        duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+        return static_cast<double>(time_span.count());
     }
 };
 
-#endif // CHRONO_H
+#endif // CHRONOMETER_H
