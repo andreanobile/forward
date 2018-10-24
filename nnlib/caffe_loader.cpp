@@ -233,7 +233,7 @@ unique_ptr<Net> CaffeLoader::load_prototxt(const string &fname, const string &da
         return net;
 
     } else {
-        cout << string("cannot open file ") + string(fname) << endl;
+        cout << string("cannot open file ") + fname << endl;
         abort();
     }
 }
