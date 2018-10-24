@@ -1,6 +1,9 @@
 # forward
 a small and fast neural network inference engine
 
+On my laptop I get over 1.6x speedup using this code (No MKL) compared to Caffe+MKL, using 1 core.
+This code scales almost lienearly with the number of cores by processing each image in a separate thread.
+
 A package containing extracted networks to test this program is
 available here: https://drive.google.com/open?id=1QWEXEsZO6OhqolNyzhf2AXxn_07jHnlt
 
@@ -44,5 +47,6 @@ resnet-152
 ```
 $ ./nnlib_test r152  ~/Pictures/*.jpg
 ```
+
 
 
