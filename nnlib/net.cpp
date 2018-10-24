@@ -58,7 +58,7 @@ struct NetMem
         auto bestblk = blks.end();
         size_t minsize = numeric_limits<size_t>::max();
 
-        for (auto it = blks.begin(); it != blks.end(); it++) {
+        for (auto it = blks.begin(); it != blks.end(); ++it) {
             if(!it->in_use && it->sz >= amount) {
                 if(it->sz <= minsize) {
                     minsize = min(it->sz, minsize);
@@ -179,6 +179,7 @@ bool Net::bind(const vector<size_t> &shape)
         }
 
         bool do_inplace = layer->inplace_possible;
+        //bool do_inplace = false;
 
         size_t idx;
 
