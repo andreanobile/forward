@@ -27,13 +27,15 @@
 #include <memory>
 #include <immintrin.h>
 #include <assert.h>
+#include <mutex>
 
 class ndarray
 {
     size_t num_elements;
     float *data;
     bool own_data;
-    volatile unsigned long lock;
+    //volatile unsigned long lock;
+    std::mutex sdtmutex;
 
 public:
 
@@ -46,15 +48,14 @@ public:
     ndarray &operator=(ndarray &&b) = delete;
     ndarray(ndarray &&b) = delete;
 
-    volatile unsigned long *get_lock_address()
+    std::mutex &get_mutex()
     {
-        return &lock;
+        return sdtmutex;
     }
 
     ndarray()
     {
         data = nullptr;
-        lock = 0;
         num_elements = 0;
         own_data = true;
     }
@@ -62,7 +63,6 @@ public:
     explicit ndarray(const std::vector<size_t> &s)
     {
         data = nullptr;
-        lock = 0;
         num_elements = 0;
         own_data = true;
         allocate(s);
@@ -96,7 +96,7 @@ public:
         if(s.empty()) {return;}
         size_t sz = num_elements_from_shape(s);
 
-        int ret = posix_memalign((void**)&data, 64, sizeof(float)*sz);
+        int ret = posix_memalign(reinterpret_cast<void**>(&data), 64, sizeof(float)*sz);
         if(ret != 0) {
             std::cout << "failed to allocate ndarray" << std::endl;
             abort();
