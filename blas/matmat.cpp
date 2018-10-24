@@ -75,8 +75,11 @@
 #include <string.h>
 #include <assert.h>
 #include <set>
+#include <mutex>
+
 #include "matmat.h"
 #include "blas_memory.h"
+
 
 
 using namespace std;
@@ -238,9 +241,7 @@ static int sgemm_nn(blas_arg_t *args, float *sa, float *sb, long mode, float *bb
 }
 
 
-
-
-void matmat(float *a, float *b, float *c, int m, int n, int k, int mode, volatile unsigned long *lock_addr)
+void matmat(float *a, float *b, float *c, int m, int n, int k, std::mutex &stdmutex, int mode)
 {
     static set<float*> set_a;
 
@@ -282,15 +283,12 @@ void matmat(float *a, float *b, float *c, int m, int n, int k, int mode, volatil
             sgemm_nn(&args, sa, sb, 2, a);
 
         } else {
-            if(lock_addr) {
-                blas_lock(lock_addr);
-            }
+            stdmutex.lock();
 
             auto it = set_a.find(a);
             if(it != set_a.end()) {
-                if(lock_addr) {
-                    blas_unlock(lock_addr);
-                }
+                stdmutex.unlock();
+
                 sgemm_nn(&args, sa, sb, 2, a);
                 blas_memory_free(buffer);
                 return;
@@ -303,9 +301,7 @@ void matmat(float *a, float *b, float *c, int m, int n, int k, int mode, volatil
             memcpy(a, reordered_a, sizeof(float)*m*k);
             set_a.insert(a);
 
-            if(lock_addr) {
-                blas_unlock(lock_addr);
-            }
+            stdmutex.unlock();
             free(reordered_a);
         }
 

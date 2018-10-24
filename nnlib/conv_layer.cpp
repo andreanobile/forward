@@ -92,7 +92,8 @@ static inline void matmul(ndarray *ma, ndarray *mb, ndarray *mc, size_t m, size_
 
 #ifdef MATMUL_USE_MATMAT
 
-    matmat(ma->get_data(), mb->get_data(), mc->get_data(), m, n, k, 1, ma->get_lock_address());
+    //matmat(ma->get_data(), mb->get_data(), mc->get_data(), m, n, k, 1, ma->get_lock_address());
+    matmat(ma->get_data(), mb->get_data(), mc->get_data(), m, n, k, ma->get_mutex(), 1);
 
 #else
 

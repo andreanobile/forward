@@ -34,9 +34,10 @@
 #ifndef MATMAT_H
 #define MATMAT_H
 
-#include <stdlib.h>
 
-void matmat(float *a, float *b, float *c, int m, int n, int k, int mode = 0, volatile unsigned long *lock_addr = nullptr);
+#include <mutex>
+
+void matmat(float *a, float *b, float *c, int m, int n, int k, std::mutex &stdmutex, int mode = 0);
 
 #endif // MATMAT_H
 
