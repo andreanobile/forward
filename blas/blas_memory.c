@@ -302,7 +302,7 @@ allocation :
 
             map_address = (void *)-1;
 
-            func = &memoryalloc[0];
+            func = &memoryalloc[1];
 
             while ((func != NULL) && (map_address == (void *) -1)) {
                 map_address = (*func)((void *)base_address);
