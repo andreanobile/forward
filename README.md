@@ -1,8 +1,16 @@
 # forward
 a small and fast neural network inference engine
 
-On my laptop I get over 1.6x speedup using this code (No MKL) compared to Caffe+MKL, using 1 core.
+On my laptop I get over 1.6x speedup using this code (No MKL) compared to Caffe+MKL, both using 1 core.
 This code scales almost lienearly with the number of cores by processing each image in a separate thread.
+The amount of memory used is also very different, almost 4x less!
+
+Caffe (resnet-50) used from python on the famous kitten picture:
+Maximum resident set size (kbytes): 487384
+
+forward on the same picture:
+Maximum resident set size (kbytes): 136900
+
 
 A package containing extracted networks to test this program is
 available here: https://drive.google.com/open?id=1QWEXEsZO6OhqolNyzhf2AXxn_07jHnlt
