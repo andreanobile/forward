@@ -12,33 +12,37 @@ https://github.com/KaimingHe/deep-residual-networks (their licence applies)
 
 
 To run the program a HASWELL (supporting AVX, fma) or newer cpu is needed. A Linux system is also needed. 
+The code depends on turbojpeg and libgd to load and rescale jpeg images.
 
 BUILD:
-in the source directory use cmake.
 
-$ cmake -DCMAKE_BUILD_TYPE=Release .
-
+```
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ make
+$ cd ..
+```
 
-
+in the source directory use cmake.
 USAGE: 
 
 download the extracted networks from the googledrive link. The test program looks into ../networks .
 To run with the places 365 network on your pictures contained in the directory ~/Pictures :
-
+```
 $ ./nnlib_test places ~/Pictures/*.jpg
-
+```
 To run the resnet-50 network trained on imagenet:
-
+```
 $ ./nnlib_test r50  ~/Pictures/*.jpg
-
+```
 resnet-101
-
+```
 $ ./nnlib_test r101  ~/Pictures/*.jpg
-
+```
 resnet-152
-
+```
 $ ./nnlib_test r152  ~/Pictures/*.jpg
-
+```
 
 
