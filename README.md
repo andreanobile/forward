@@ -1,5 +1,5 @@
 # forward
-a small and fast neural network inference engine
+a small and fast C++ neural network inference engine
 
 On my laptop I get over 1.6x speedup using this code (No MKL) compared to Caffe+MKL, both using 1 core.
 This code scales almost lienearly with the number of cores by processing each image in a separate thread.
